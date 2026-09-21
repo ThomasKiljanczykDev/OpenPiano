@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="keyboard_octave_down">Octave down</string>
+    <string name="keyboard_octave_up">Octave up</string>
+    <string name="keyboard_key_down">Key down</string>
+    <string name="keyboard_key_up">Key up</string>
+    <string name="keyboard_overview">Keyboard overview, drag to scroll</string>
+    <string name="keyboard_settings">Settings</string>
+    <string name="keyboard_loading">Loading piano samples</string>
+</resources>

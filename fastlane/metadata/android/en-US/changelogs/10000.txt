@@ -1,0 +1,3 @@
+Initial release: low-latency touchscreen piano keyboard, multi-touch,
+configurable key count and labels, octave/key shift, USB MIDI output,
+reverb and limiter, 6 languages.

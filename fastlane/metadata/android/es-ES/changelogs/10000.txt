@@ -1,0 +1,3 @@
+Lanzamiento inicial: piano táctil de baja latencia, multitáctil,
+número de teclas y etiquetas configurables, desplazamiento de
+octava/tecla, salida MIDI USB, reverb y limitador, 6 idiomas.

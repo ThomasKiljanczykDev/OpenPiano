@@ -1,0 +1,182 @@
+name: Release (Android)
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Build and sign, but do not tag or publish a GitHub release"
+        type: boolean
+        default: true
+      prerelease:
+        description: "Mark the GitHub release as a prerelease"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-android
+  cancel-in-progress: false
+
+defaults:
+  run:
+    working-directory: android
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      # Tag and versionName both derive from AppVersion.kt.
+      - name: Resolve version
+        id: version
+        working-directory: .
+        run: |
+          set -euo pipefail
+          f=android/build-logic/convention/src/main/kotlin/dev/thomas_kiljanczyk/openpiano/buildlogic/AppVersion.kt
+          read_component() {
+            grep -oE "const val $1 = [0-9]+" "$f" | grep -oE '[0-9]+$'
+          }
+          major=$(read_component MAJOR)
+          minor=$(read_component MINOR)
+          patch=$(read_component PATCH)
+          version="${major}.${minor}.${patch}"
+          version_code=$((major * 10000 + minor * 100 + patch))
+          tag="v${version}"
+
+          if git rev-parse -q --verify "refs/tags/${tag}" >/dev/null; then
+            echo "::error::Tag ${tag} already exists. Bump AppVersion.kt before releasing."
+            exit 1
+          fi
+
+          {
+            echo "version=${version}"
+            echo "version_code=${version_code}"
+            echo "tag=${tag}"
+          } >> "$GITHUB_OUTPUT"
+          echo "Releasing ${tag} (versionCode ${version_code})"
+
+      - uses: ./.github/actions/android-setup
+
+      # RUNNER_TEMP keeps the keystore out of the workspace and uploaded artifacts.
+      - name: Decode signing keystore
+        env:
+          RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+        run: |
+          set -euo pipefail
+          if [ -z "${RELEASE_KEYSTORE_BASE64}" ]; then
+            echo "::error::RELEASE_KEYSTORE_BASE64 is not set. See docs/RELEASING.md."
+            exit 1
+          fi
+          keystore="${RUNNER_TEMP}/openpiano-release.jks"
+          printf '%s' "${RELEASE_KEYSTORE_BASE64}" | base64 -d > "${keystore}"
+          chmod 600 "${keystore}"
+          echo "RELEASE_KEYSTORE_PATH=${keystore}" >> "$GITHUB_ENV"
+
+      - name: Write play Firebase configuration
+        env:
+          PLAY_GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.PLAY_GOOGLE_SERVICES_JSON_BASE64 }}
+        run: |
+          set -euo pipefail
+          if [ -z "${PLAY_GOOGLE_SERVICES_JSON_BASE64}" ]; then
+            echo "::error::PLAY_GOOGLE_SERVICES_JSON_BASE64 is not set. See docs/RELEASING.md."
+            exit 1
+          fi
+          printf '%s' "${PLAY_GOOGLE_SERVICES_JSON_BASE64}" | base64 -d > app/src/play/google-services.json
+
+      - name: Verify
+        run: ./gradlew detekt lint testFossDebugUnitTest testPlayDebugUnitTest :core:model:test
+
+      - name: Assemble signed release artifacts
+        env:
+          RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+          RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+        run: ./gradlew assembleFossRelease assemblePlayRelease bundleFossRelease bundlePlayRelease
+
+      - name: Verify signatures
+        run: |
+          set -euo pipefail
+          sdk="${ANDROID_HOME:-${ANDROID_SDK_ROOT:?Android SDK location is not set}}"
+          apksigner=$(find "${sdk}/build-tools" -name apksigner | sort -V | tail -n 1)
+          if [ -z "${apksigner}" ]; then
+            echo "::error::apksigner not found under ${sdk}/build-tools."
+            exit 1
+          fi
+          for apk in app/build/outputs/apk/foss/release/*.apk app/build/outputs/apk/play/release/*.apk; do
+            echo "== ${apk}"
+            certs=$("${apksigner}" verify --print-certs "${apk}")
+            echo "${certs}"
+            if grep -q "CN=Android Debug" <<< "${certs}"; then
+              echo "::error::${apk} is signed with the debug certificate."
+              exit 1
+            fi
+          done
+          for aab in app/build/outputs/bundle/fossRelease/*.aab app/build/outputs/bundle/playRelease/*.aab; do
+            echo "== ${aab}"
+            certs=$(jarsigner -verify -verbose -certs "${aab}")
+            if ! grep -q "jar verified" <<< "${certs}"; then
+              echo "::error::${aab} is not signed."
+              exit 1
+            fi
+            if grep -q "CN=Android Debug" <<< "${certs}"; then
+              echo "::error::${aab} is signed with the debug certificate."
+              exit 1
+            fi
+          done
+
+      - name: Collect artifacts
+        id: artifacts
+        run: |
+          set -euo pipefail
+          version="${{ steps.version.outputs.version }}"
+          out="${RUNNER_TEMP}/artifacts"
+          mkdir -p "${out}"
+          # Symbols deobfuscate reported stack traces; foss builds have no Crashlytics.
+          for flavor in foss play; do
+            cp "app/build/outputs/apk/${flavor}/release/app-${flavor}-release.apk" \
+              "${out}/OpenPiano-${version}-${flavor}.apk"
+            cp "app/build/outputs/bundle/${flavor}Release/app-${flavor}-release.aab" \
+              "${out}/OpenPiano-${version}-${flavor}.aab"
+            zip -j "${out}/OpenPiano-${version}-${flavor}-symbols.zip" \
+              "app/build/outputs/mapping/${flavor}Release/mapping.txt" \
+              "app/build/outputs/native-debug-symbols/${flavor}Release/native-debug-symbols.zip"
+          done
+          ls -lh "${out}"
+          echo "dir=${out}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: release-artifacts-${{ steps.version.outputs.version }}
+          path: ${{ steps.artifacts.outputs.dir }}
+          if-no-files-found: error
+
+      - name: Tag and publish release
+        if: ${{ !inputs.dry_run }}
+        working-directory: .
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          tag="${{ steps.version.outputs.tag }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "${tag}" -m "OpenPiano ${tag}"
+          git push origin "${tag}"
+
+          args=(--title "OpenPiano ${tag}" --generate-notes)
+          if [ "${{ inputs.prerelease }}" = "true" ]; then
+            args+=(--prerelease)
+          fi
+          gh release create "${tag}" "${{ steps.artifacts.outputs.dir }}"/* "${args[@]}"
+
+      - name: Remove signing material
+        if: always()
+        run: |
+          rm -f "${RUNNER_TEMP}/openpiano-release.jks" app/src/play/google-services.json

@@ -1,0 +1,68 @@
+name: Regenerate baseline profile
+
+# Opens a PR only when the regenerated profile differs from the committed one.
+# Requires Settings > Actions > General > "Allow GitHub Actions to create and approve pull requests".
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: baseline-profile
+  cancel-in-progress: false
+
+defaults:
+  run:
+    working-directory: android
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Enable KVM
+        working-directory: .
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      # The runner image ships no libpulse, and qemu-system-x86_64 links against it.
+      - name: Install emulator shared libraries
+        working-directory: .
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libpulse0 libnss3 libxcursor1 libxdamage1 \
+            libxcomposite1 libxi6 libxtst6
+
+      - uses: ./.github/actions/free-disk-space
+      - uses: ./.github/actions/android-setup
+
+      # API 36 google-atd ships on the SDK dev channel only; GMD auto-download misses it.
+      - name: Install managed device system image
+        run: |
+          sdkmanager="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          yes | "$sdkmanager" --channel=2 --install "system-images;android-36;google_atd;x86_64" > /dev/null
+          yes | "$sdkmanager" --licenses > /dev/null || true
+
+      - name: Generate baseline profile
+        run: ./gradlew :app:generateBaselineProfile --stacktrace --max-workers=1
+
+      - uses: peter-evans/create-pull-request@v8
+        with:
+          base: main
+          branch: chore/regenerate-baseline-profile
+          delete-branch: true
+          add-paths: |
+            android/app/src/**/generated/baselineProfiles/*.txt
+          commit-message: "chore: regenerate baseline profile"
+          title: "chore: regenerate baseline profile"
+          body: |
+            Regenerated on the `pixel6Api36` managed device (Pixel 6, API 36, google-atd) via
+            `:app:generateBaselineProfile`.

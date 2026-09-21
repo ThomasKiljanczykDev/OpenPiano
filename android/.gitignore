@@ -1,0 +1,11 @@
+.idea/*
+!.idea/.gitignore
+!.idea/codeStyles/
+!.idea/inspectionProfiles/
+!.idea/runConfigurations/
+!.idea/compiler.xml
+!.idea/detekt.xml
+!.idea/gradle.xml
+!.idea/kotlinc.xml
+!.idea/misc.xml
+!.idea/vcs.xml

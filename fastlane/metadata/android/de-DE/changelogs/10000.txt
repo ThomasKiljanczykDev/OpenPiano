@@ -1,0 +1,3 @@
+Erstveröffentlichung: latenzarmes Touchscreen-Klavier, Multitouch,
+einstellbare Tastenzahl und Beschriftung, Oktav-/Tastenverschiebung,
+USB-MIDI-Ausgang, Reverb und Limiter, 6 Sprachen.

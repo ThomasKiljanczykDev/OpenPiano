@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="keyboard_octave_down">Oktave runter</string>
+    <string name="keyboard_octave_up">Oktave hoch</string>
+    <string name="keyboard_key_down">Taste runter</string>
+    <string name="keyboard_key_up">Taste hoch</string>
+    <string name="keyboard_overview">Tastaturübersicht, zum Scrollen ziehen</string>
+    <string name="keyboard_settings">Einstellungen</string>
+    <string name="keyboard_loading">Klavier-Samples werden geladen</string>
+</resources>

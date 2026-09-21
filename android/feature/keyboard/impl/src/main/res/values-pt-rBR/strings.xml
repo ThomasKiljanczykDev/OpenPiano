@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="keyboard_octave_down">Oitava abaixo</string>
+    <string name="keyboard_octave_up">Oitava acima</string>
+    <string name="keyboard_key_down">Tecla abaixo</string>
+    <string name="keyboard_key_up">Tecla acima</string>
+    <string name="keyboard_overview">Visão geral do teclado, arraste para rolar</string>
+    <string name="keyboard_settings">Configurações</string>
+    <string name="keyboard_loading">Carregando amostras de piano</string>
+</resources>

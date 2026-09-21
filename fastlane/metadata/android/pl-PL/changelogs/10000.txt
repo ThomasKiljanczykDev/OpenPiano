@@ -1,0 +1,4 @@
+Wydanie początkowe: pianino dotykowe o niskim opóźnieniu, wiele
+dotknięć naraz, konfigurowalna liczba klawiszy i etykiety,
+przesunięcie oktawy/klawisza, wyjście MIDI USB, pogłos i limiter,
+6 języków.

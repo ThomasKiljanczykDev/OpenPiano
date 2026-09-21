@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package dev.thomas_kiljanczyk.openpiano.core.datastore.proto;
+
+option java_package = "dev.thomas_kiljanczyk.openpiano.core.datastore.proto";
+option java_multiple_files = true;
+
+message KeyboardSettings {
+  reserved 2;
+  reserved "lowest_octave";
+
+  int32 visible_white_keys = 1;
+  KeyLabelMode label_mode = 3;
+  int32 lowest_note = 4;
+  ReverbState reverb_state = 5;
+  bool midi_output_enabled = 6;
+  TouchHitTestMode touch_hit_test_mode = 7;
+  int32 area_overlap_threshold_percent = 8;
+}
+
+enum KeyLabelMode {
+  LABEL_UNSPECIFIED = 0;
+  LABEL_NONE = 1;
+  LABEL_C_ONLY = 2;
+  LABEL_ALL = 3;
+}
+
+enum ReverbState {
+  REVERB_UNSPECIFIED = 0;
+  REVERB_ON = 1;
+  REVERB_OFF = 2;
+}
+
+enum TouchHitTestMode {
+  TOUCH_HIT_TEST_MODE_UNSPECIFIED = 0;
+  TOUCH_HIT_TEST_MODE_POINT = 1;
+  TOUCH_HIT_TEST_MODE_AREA = 2;
+}

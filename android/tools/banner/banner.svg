@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 500" width="1024" height="500">
+  <!-- Banner/feature-graphic source for OpenPiano. See tools/banner/README.md to regenerate. -->
+  <rect x="0" y="0" width="1024" height="500" fill="#141414" />
+
+  <text
+    x="512"
+    y="200"
+    text-anchor="middle"
+    font-family="sans-serif"
+    font-weight="bold"
+    font-size="96"
+    fill="#F7F5F0">OpenPiano</text>
+
+  <g>
+    <rect x="57" y="310" width="910" height="190" fill="none" stroke="#8A8A8A" stroke-width="1.2" />
+    <rect x="57" y="310" width="70" height="190" fill="#F7F5F0" stroke="#8A8A8A" stroke-width="0.8" />
+    <rect x="127" y="310" width="70" height="190" fill="#F7F5F0" stroke="#8A8A8A" stroke-width="0.8" />
+    <rect x="197" y="310" width="70" height="190" fill="#F7F5F0" stroke="#8A8A8A" stroke-width="0.8" />
+    <rect x="267" y="310" width="70" height="190" fill="#F7F5F0" stroke="#8A8A8A" stroke-width="0.8" />
+    <rect x="337" y="310" width="70" height="190" fill="#F7F5F0" stroke="#8A8A8A" stroke-width="0.8" />
+    <rect x="407" y="310" width="70" height="190" fill="#F7F5F0" stroke="#8A8A8A" stroke-width="0.8" />
+    <rect x="477" y="310" width="70" height="190" fill="#F7F5F0" stroke="#8A8A8A" stroke-width="0.8" />
+    <rect x="547" y="310" width="70" height="190" fill="#F7F5F0" stroke="#8A8A8A" stroke-width="0.8" />
+    <rect x="617" y="310" width="70" height="190" fill="#F7F5F0" stroke="#8A8A8A" stroke-width="0.8" />
+    <rect x="687" y="310" width="70" height="190" fill="#F7F5F0" stroke="#8A8A8A" stroke-width="0.8" />
+    <rect x="757" y="310" width="70" height="190" fill="#F7F5F0" stroke="#8A8A8A" stroke-width="0.8" />
+    <rect x="827" y="310" width="70" height="190" fill="#F7F5F0" stroke="#8A8A8A" stroke-width="0.8" />
+    <rect x="897" y="310" width="70" height="190" fill="#F7F5F0" stroke="#8A8A8A" stroke-width="0.8" />
+    <rect x="105" y="310" width="44" height="120" fill="#0A0A0A" stroke="#BFBFBF" stroke-width="0.6" />
+    <rect x="175" y="310" width="44" height="120" fill="#0A0A0A" stroke="#BFBFBF" stroke-width="0.6" />
+    <rect x="315" y="310" width="44" height="120" fill="#0A0A0A" stroke="#BFBFBF" stroke-width="0.6" />
+    <rect x="385" y="310" width="44" height="120" fill="#0A0A0A" stroke="#BFBFBF" stroke-width="0.6" />
+    <rect x="455" y="310" width="44" height="120" fill="#0A0A0A" stroke="#BFBFBF" stroke-width="0.6" />
+    <rect x="595" y="310" width="44" height="120" fill="#0A0A0A" stroke="#BFBFBF" stroke-width="0.6" />
+    <rect x="665" y="310" width="44" height="120" fill="#0A0A0A" stroke="#BFBFBF" stroke-width="0.6" />
+    <rect x="805" y="310" width="44" height="120" fill="#0A0A0A" stroke="#BFBFBF" stroke-width="0.6" />
+    <rect x="875" y="310" width="44" height="120" fill="#0A0A0A" stroke="#BFBFBF" stroke-width="0.6" />
+  </g>
+</svg>

@@ -1,0 +1,59 @@
+piano.sf3 - OpenPiano Acoustic Grand Piano (SF3)
+===============================================
+
+Licence: Creative Commons Attribution 3.0 Unported (CC BY 3.0)
+         https://creativecommons.org/licenses/by/3.0/
+
+Required attribution
+--------------------
+Sounds derived from "Salamander Grand Piano V3" by Alexander Holm,
+licensed CC BY 3.0. Retuned/remapped SFZ distribution by Markus Fiedler and
+kinwie. Recording: Yamaha C5, two AKG C414 in AB position, 48 kHz / 24 bit.
+
+Provenance
+----------
+Date built .......... 2026-09-04
+Source repository ... https://github.com/sfzinstruments/SalamanderGrandPiano
+Sample files ........ https://raw.githubusercontent.com/sfzinstruments/SalamanderGrandPiano/master/Samples/<NOTE>v13.flac
+Licence file ........ https://raw.githubusercontent.com/sfzinstruments/SalamanderGrandPiano/master/LICENSE
+Upstream original ... https://archive.org/details/SalamanderGrandPianoV3
+Licence statement ... The upstream README.md states: "This work is licensed
+                      under a Creative Commons Attribution 3.0 Unported
+                      License." The repository's LICENSE file contains the full
+                      CC BY 3.0 Unported legal code.
+
+What was done to it
+-------------------
+1. Downloaded 30 FLAC files, velocity layer 13 of 16, one per sampled pitch
+   (the instrument is sampled in minor thirds: A0, C1, D#1, F#1 ... C8,
+   MIDI root keys 21, 24, 27 ... 108).  See fetch_samples.sh.
+2. Downmixed each stereo file to mono (channel mean).
+3. Truncated each to a fixed length with a 0.30 s linear fade-out:
+   6.0 s below MIDI 48, 5.0 s below 72, 3.5 s below 96, 2.5 s above.
+4. Applied one global gain (1.887x) so the loudest sample peaks at 0.92;
+   relative dynamics between keys are preserved.
+5. Encoded each sample as a complete mono Ogg/Vorbis bitstream
+   (libsndfile/libvorbis, compression_level 0.05 = high quality).
+6. Measured each recording's deviation from equal temperament by harmonic-sum
+   FFT analysis and baked the inverse into shdr.pitchCorrection, so the
+   stretch tuning of the original piano is normalised to 12-TET
+   (corrections range from +23 cents at C1 to -99 cents at C8).
+7. Assembled an SF3 file by hand (build_sf3.py): RIFF/sfbk with LIST INFO
+   (ifil 2.1), LIST sdta (smpl = the concatenated Ogg streams) and LIST pdta
+   (phdr/pbag/pmod/pgen/inst/ibag/imod/igen/shdr, each with a terminal
+   record).  Each shdr uses sampleType 0x0011 (monoSample | SF3 compression),
+   start/end as byte offsets of its Ogg stream within the smpl chunk, and
+   startLoop/endLoop as sample-frame offsets relative to the sample start,
+   which is exactly the convention tsf.h's tsf_decode_sf3_samples() expects.
+   One preset, bank 0 / program 0, "Acoustic Grand", with 30 instrument zones.
+   No loop points (sampleModes 0) - the samples decay naturally.
+
+No changes were made to the recorded audio other than those listed above.
+
+Third-party files included in this directory for verification only
+------------------------------------------------------------------
+tsf.h        - TinySoundFont by Bernhard Schelling, MIT licence.
+               https://github.com/schellingb/TinySoundFont
+stb_vorbis.c - by Sean Barrett, public domain (Unlicense) / MIT.
+               https://github.com/nothings/stb
+These are not part of piano.sf3 and are not redistributed as part of it.

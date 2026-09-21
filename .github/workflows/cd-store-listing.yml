@@ -1,0 +1,106 @@
+name: Publish store images
+
+# Uploads Play listing images only (screenshots, feature graphic, icon) as a draft:
+# nothing ships until "Send for review" in Play Console. Listing text is edited in Play Console.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Validate only: runs the whole Play edit, then discards it"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+# Concurrent Play edits conflict on commit.
+concurrency:
+  group: play-edit
+  cancel-in-progress: false
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/android-setup
+
+      - name: Render screenshots
+        working-directory: android
+        run: ./gradlew :tools:gplay-screenshots:updateDebugScreenshotTest
+
+      - name: Export screenshots
+        run: android/tools/gplay-screenshots/export_to_fastlane.sh
+
+      - name: Validate images
+        run: python3 fastlane/validate_metadata.py --expect-images
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: store-listing-screenshots
+          path: fastlane/metadata/android/*/images/phoneScreenshots/
+          if-no-files-found: error
+
+  publish:
+    needs: render
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: production
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: store-listing-screenshots
+          path: fastlane/metadata/android
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          working-directory: fastlane
+          bundler-cache: true
+
+      - name: Check Google Cloud configuration
+        run: |
+          missing=
+          [ -n '${{ vars.GCP_WI_PROVIDER }}' ] || missing="$missing GCP_WI_PROVIDER"
+          [ -n '${{ vars.GCP_PLAY_SA }}' ] || missing="$missing GCP_PLAY_SA"
+          if [ -n "$missing" ]; then
+            echo "::error::Missing variable(s):$missing. See docs/RELEASING.md."
+            exit 1
+          fi
+
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ vars.GCP_WI_PROVIDER }}
+          service_account: ${{ vars.GCP_PLAY_SA }}
+          create_credentials_file: true
+
+      - name: Upload images to Play
+        working-directory: fastlane
+        timeout-minutes: 20
+        env:
+          SUPPLY_UPLOAD_MAX_RETRIES: "5"
+        run: |
+          exec bundle exec fastlane supply \
+            --package_name dev.thomas_kiljanczyk.openpiano \
+            --metadata_path metadata/android \
+            --json_key '${{ steps.auth.outputs.credentials_file_path }}' \
+            --skip_upload_metadata --skip_upload_changelogs \
+            --skip_upload_apk --skip_upload_aab \
+            --changes_not_sent_for_review \
+            ${{ inputs.dry_run && '--validate_only' || ' ' }}
+
+      - name: Summarise
+        run: |
+          if [ '${{ inputs.dry_run }}' = 'true' ]; then
+            echo '## Dry run: nothing was written to Play' >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo '## Images staged as a draft. Press "Send for review" in Play Console.' >> "$GITHUB_STEP_SUMMARY"
+          fi

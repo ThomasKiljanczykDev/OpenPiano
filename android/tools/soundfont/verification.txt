@@ -1,0 +1,33 @@
+=== 2026-09-04T16:49:08Z : cc -O2 -o verify verify.c -lm ; ./verify piano.sf3 ===
+file          : piano.sf3
+preset count  : 1
+preset[0] name: Acoustic Grand
+bank/preset   : 0/0
+sounding range: MIDI 0 .. 127
+note  21  peak=0.475618  rms=0.085904  OK
+note  36  peak=0.335562  rms=0.051855  OK
+note  48  peak=0.364840  rms=0.052492  OK
+note  60  peak=0.510943  rms=0.065061  OK
+note  72  peak=0.235189  rms=0.023264  OK
+note  84  peak=0.394799  rms=0.025357  OK
+note  96  peak=0.336309  rms=0.021932  OK
+note 108  peak=0.176092  rms=0.008176  OK
+RESULT: PASS
+
+=== pitch check (numpy FFT harmonic-sum over verify.c's dump_<note>.f32 renders) ===
+post-correction pitch check (rendered by tsf @48k):
+ note  21 expected    27.50 Hz  measured    27.51 Hz  err  +0.5 cents
+ note  36 expected    65.41 Hz  measured    65.43 Hz  err  +0.5 cents
+ note  48 expected   130.81 Hz  measured   130.74 Hz  err  -1.0 cents
+ note  60 expected   261.63 Hz  measured   261.55 Hz  err  -0.5 cents
+ note  72 expected   523.25 Hz  measured   523.40 Hz  err  +0.5 cents
+ note  84 expected  1046.50 Hz  measured  1046.50 Hz  err  +0.0 cents
+ note  96 expected  2093.00 Hz  measured  2093.61 Hz  err  +0.5 cents
+ note 108 expected  4186.01 Hz  measured  4187.22 Hz  err  +0.5 cents
+
+Notes:
+ - verify.c writes dump_<note>.f32 (raw float32 stereo interleaved, 48 kHz, 2 s)
+   next to itself; those were analysed with numpy to produce the table above.
+ - "sounding range: MIDI 0 .. 127" is by design: the lowest zone's key range is
+   extended down to 0 and the highest up to 127, so no key is ever silent.
+   Sampled (untransposed-by-more-than-a-semitone) range is MIDI 21..108.
