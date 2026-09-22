@@ -44,7 +44,7 @@ class OpenPianoApplication : Application() {
             threadPolicyBuilder.permitExplicitGc()
         }
         StrictMode.setThreadPolicy(
-            threadPolicyBuilder.penaltyLog().penaltyDialog().build(),
+            threadPolicyBuilder.penaltyLog().build(),
         )
 
         StrictMode.setVmPolicy(
