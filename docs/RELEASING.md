@@ -63,6 +63,10 @@ $ANDROID_HOME/cmdline-tools/latest/bin/retrace mapping.txt stacktrace.txt
 | `docs/images/OpenPiano-banner.png`, `docs/images/OpenPiano-social-preview.png` | `android/tools/banner/banner.svg` | `android/tools/banner/render_banner.sh` |
 | `images/icon.png` | `android/tools/icon/icon.svg` | `android/tools/icon/render_icon.sh` |
 | `images/phoneScreenshots/` | `android/tools/gplay-screenshots` | see below; gitignored, rendered in CI |
+| `docs/images/google-play-badge-unavailable.png`, `docs/images/fdroid-badge-unavailable.png` | upstream store badges | `android/tools/banner/render_store_badges.sh` |
+
+The README store badges are desaturated placeholders.
+Replace them with the unmodified upstream badges, linked to the listings, once each store is live.
 
 ```
 cd android && ./gradlew :tools:gplay-screenshots:updateDebugScreenshotTest

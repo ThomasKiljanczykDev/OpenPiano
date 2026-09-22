@@ -1,36 +1,18 @@
-OpenPiano macht aus deinem Telefon oder Tablet ein echtes
-Touchscreen-Klavier, mit latenzarmem Klang und echtem Multitouch — spiele
-Akkorde, halte Töne und gleite zwischen den Tasten,
-genau wie auf einem echten Keyboard.
+OpenPiano macht aus deinem Telefon oder Tablet ein echtes Touchscreen-Klavier, mit latenzarmem Klang und echtem Multitouch — spiele Akkorde, halte Töne und gleite zwischen den Tasten, genau wie auf einem echten Keyboard.
+Keine Werbung, niemals — nichts unterbricht dein Spiel.
 
 Funktionen:
 
-- Latenzarme Audio-Engine, optimiert für die kürzestmögliche
-  Verzögerung zwischen Berührung und Klang.
-- Echtes Multitouch: spiele so viele Töne gleichzeitig,
-  wie deine Finger erlauben, mit Halten-zum-Sustain und Glissando.
-- Einstellbare Tastaturbreite, von 7 bis 21 sichtbaren weißen Tasten,
-  mit einer Übersichtsleiste, die deine Position im vollen
-  88-Tasten-Bereich zeigt.
-- Oktav- und Einzeltasten-Verschiebung, um den vollen Tonumfang des
-  Klaviers zu erreichen.
-- Tastenbeschriftung: aus, nur C, oder alle Notennamen.
-- USB-MIDI-Ausgang — verbinde dein Gerät mit einem Computer oder
-  Audio-Interface und spiele damit eine DAW,
-  einen Synthesizer oder jedes andere MIDI-fähige Gerät.
-- Ein warmer Konzertflügel-Klang, gesampelt von einem echten Yamaha C5
-  (Salamander Grand Piano, CC BY 3.0), mit Reverb und Limiter.
-- Verfügbar auf Englisch, Deutsch, Spanisch, Französisch, Polnisch,
-  und brasilianischem Portugiesisch.
+• Keine Werbung, keine In-App-Käufe, kein Konto nötig.
+• Latenzarme Audio-Engine, optimiert für die kürzestmögliche Verzögerung zwischen Berührung und Klang.
+• Echtes Multitouch: spiele so viele Töne gleichzeitig, wie deine Finger erlauben, mit Halten-zum-Sustain und Glissando.
+• Einstellbare Tastaturbreite, von 7 bis 21 sichtbaren weißen Tasten, mit einer Übersichtsleiste, die deine Position im vollen 88-Tasten-Bereich zeigt.
+• Oktav- und Einzeltasten-Verschiebung, um den vollen Tonumfang des Klaviers zu erreichen.
+• Tastenbeschriftung: aus, nur C, oder alle Notennamen.
+• USB-MIDI-Ausgang — verbinde dein Gerät mit einem Computer oder Audio-Interface und spiele damit eine DAW, einen Synthesizer oder jedes andere MIDI-fähige Gerät.
+• Ein warmer Konzertflügel-Klang, gesampelt von einem echten Yamaha C5 (Salamander Grand Piano, CC BY 3.0), mit Reverb und Limiter.
+• Verfügbar auf Englisch, Deutsch, Spanisch, Französisch, Polnisch, und brasilianischem Portugiesisch.
 
-OpenPiano ist freie und quelloffene Software, veröffentlicht unter der
-GNU General Public License v3 oder später. Der Quellcode ist auf
-GitHub verfügbar: https://github.com/ThomasKiljanczykDev/OpenPiano
+OpenPiano ist freie und quelloffene Software, veröffentlicht unter der GNU General Public License v3 oder später. Der Quellcode ist auf GitHub verfügbar: https://github.com/ThomasKiljanczykDev/OpenPiano
 
-Diese Version nutzt Firebase Analytics (nur automatische Erfassung —
-aktive Nutzer, Land, Stadt; keine benutzerdefinierten Ereignisse,
-keine Werbe-ID) und Firebase Crashlytics für Absturzberichte,
-deaktiviert in Debug-Builds. Eine Version ohne beides,
-für F-Droid und den Direktdownload,
-gibt es in den GitHub-Releases des Projekts. Details in der
-Datenschutzerklärung in der App.
+Diese Version nutzt Firebase Analytics (nur automatische Erfassung — aktive Nutzer, Land, Stadt; keine benutzerdefinierten Ereignisse, keine Werbe-ID) und Firebase Crashlytics für Absturzberichte, deaktiviert in Debug-Builds. Eine Version ohne beides, für F-Droid und den Direktdownload, gibt es in den GitHub-Releases des Projekts. Details in der Datenschutzerklärung in der App.

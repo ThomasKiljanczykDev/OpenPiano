@@ -1,3 +1,10 @@
-Erstveröffentlichung: latenzarmes Touchscreen-Klavier, Multitouch,
-einstellbare Tastenzahl und Beschriftung, Oktav-/Tastenverschiebung,
-USB-MIDI-Ausgang, Reverb und Limiter, 6 Sprachen.
+Erstveröffentlichung.
+
+• Keine Werbung, keine In-App-Käufe
+• Latenzarme Audio-Engine
+• Echtes Multitouch mit Sustain und Glissando
+• Einstellbare Tastenzahl und Beschriftung
+• Oktav- und Einzeltasten-Verschiebung
+• USB-MIDI-Ausgang
+• Konzertflügel-Klang mit Reverb und Limiter
+• 6 Sprachen

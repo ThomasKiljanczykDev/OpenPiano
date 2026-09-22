@@ -1,1 +1,1 @@
-Piano touchscreen de baixa latência com saída MIDI USB
+Piano touchscreen de baixa latência sem anúncios, saída MIDI USB
