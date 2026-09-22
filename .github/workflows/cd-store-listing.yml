@@ -1,7 +1,8 @@
-name: Publish store images
+name: Publish store listing
 
-# Uploads Play listing images only (screenshots, feature graphic, icon) as a draft:
-# nothing ships until "Send for review" in Play Console. Listing text is edited in Play Console.
+# Uploads the Play listing (text, changelogs, screenshots, feature graphic, icon) as a draft:
+# nothing ships until "Send for review" in Play Console.
+# fastlane/metadata is the source of truth; this overwrites Console edits.
 
 on:
   workflow_dispatch:
@@ -10,6 +11,11 @@ on:
         description: "Validate only: runs the whole Play edit, then discards it"
         type: boolean
         default: true
+      track:
+        description: "Track holding the release to attach the edit to"
+        type: choice
+        default: internal
+        options: [internal, alpha, beta, production]
 
 permissions:
   contents: read
@@ -64,6 +70,19 @@ jobs:
           working-directory: fastlane
           bundler-cache: true
 
+      # supply resolves a track release even for an images-only edit; the version code must exist on that track.
+      - name: Resolve version code
+        id: version
+        run: |
+          set -euo pipefail
+          f=android/build-logic/convention/src/main/kotlin/dev/thomas_kiljanczyk/openpiano/buildlogic/AppVersion.kt
+          read_component() {
+            grep -oE "const val $1 = [0-9]+" "$f" | grep -oE '[0-9]+$'
+          }
+          version_code=$(( $(read_component MAJOR) * 10000 + $(read_component MINOR) * 100 + $(read_component PATCH) ))
+          echo "version_code=${version_code}" >> "$GITHUB_OUTPUT"
+          echo "Targeting versionCode ${version_code} on track ${{ inputs.track }}"
+
       - name: Check Google Cloud configuration
         run: |
           missing=
@@ -82,7 +101,7 @@ jobs:
           service_account: ${{ vars.GCP_PLAY_SA }}
           create_credentials_file: true
 
-      - name: Upload images to Play
+      - name: Upload listing to Play
         working-directory: fastlane
         timeout-minutes: 20
         env:
@@ -92,7 +111,8 @@ jobs:
             --package_name dev.thomas_kiljanczyk.openpiano \
             --metadata_path metadata/android \
             --json_key '${{ steps.auth.outputs.credentials_file_path }}' \
-            --skip_upload_metadata --skip_upload_changelogs \
+            --track '${{ inputs.track }}' \
+            --version_code '${{ steps.version.outputs.version_code }}' \
             --skip_upload_apk --skip_upload_aab \
             --changes_not_sent_for_review \
             ${{ inputs.dry_run && '--validate_only' || ' ' }}
@@ -102,5 +122,5 @@ jobs:
           if [ '${{ inputs.dry_run }}' = 'true' ]; then
             echo '## Dry run: nothing was written to Play' >> "$GITHUB_STEP_SUMMARY"
           else
-            echo '## Images staged as a draft. Press "Send for review" in Play Console.' >> "$GITHUB_STEP_SUMMARY"
+            echo '## Listing staged as a draft. Press "Send for review" in Play Console.' >> "$GITHUB_STEP_SUMMARY"
           fi
