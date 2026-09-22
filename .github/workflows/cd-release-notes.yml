@@ -1,9 +1,8 @@
-name: Publish store listing
+name: Publish release notes
 
-# Uploads the Play listing (title, descriptions, screenshots, feature graphic, icon) as a draft:
-# nothing ships until "Send for review" in Play Console.
-# fastlane/metadata is the source of truth; this overwrites Console edits.
-# Release notes are cd-release-notes.yml: they need release permission the listing does not.
+# Uploads fastlane changelogs/<versionCode>.txt for every locale to the release on the
+# chosen track, as a draft: nothing ships until "Send for review" in Play Console.
+# Needs the service account's release permission, which the listing upload does not.
 
 on:
   workflow_dispatch:
@@ -13,7 +12,7 @@ on:
         type: boolean
         default: true
       track:
-        description: "Track holding the release to attach the edit to"
+        description: "Track holding the release to attach the notes to"
         type: choice
         default: internal
         options: [internal, alpha, beta, production]
@@ -27,33 +26,9 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  render:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@v7
-      - uses: ./.github/actions/android-setup
-
-      - name: Render screenshots
-        working-directory: android
-        run: ./gradlew :tools:gplay-screenshots:updateDebugScreenshotTest
-
-      - name: Export screenshots
-        run: android/tools/gplay-screenshots/export_to_fastlane.sh
-
-      - name: Validate images
-        run: python3 fastlane/validate_metadata.py --expect-images
-
-      - uses: actions/upload-artifact@v7
-        with:
-          name: store-listing-screenshots
-          path: fastlane/metadata/android/*/images/phoneScreenshots/
-          if-no-files-found: error
-
   publish:
-    needs: render
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
     environment: production
     permissions:
       contents: read
@@ -61,17 +36,11 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: actions/download-artifact@v8
-        with:
-          name: store-listing-screenshots
-          path: fastlane/metadata/android
-
       - uses: ruby/setup-ruby@v1
         with:
           working-directory: fastlane
           bundler-cache: true
 
-      # supply resolves a track release even for an images-only edit; the version code must exist on that track.
       - name: Resolve version code
         id: version
         run: |
@@ -83,6 +52,9 @@ jobs:
           version_code=$(( $(read_component MAJOR) * 10000 + $(read_component MINOR) * 100 + $(read_component PATCH) ))
           echo "version_code=${version_code}" >> "$GITHUB_OUTPUT"
           echo "Targeting versionCode ${version_code} on track ${{ inputs.track }}"
+
+      - name: Validate changelogs
+        run: python3 fastlane/validate_metadata.py --version-code '${{ steps.version.outputs.version_code }}'
 
       - name: Check Google Cloud configuration
         run: |
@@ -102,9 +74,9 @@ jobs:
           service_account: ${{ vars.GCP_PLAY_SA }}
           create_credentials_file: true
 
-      - name: Upload listing to Play
+      - name: Upload release notes to Play
         working-directory: fastlane
-        timeout-minutes: 20
+        timeout-minutes: 10
         env:
           SUPPLY_UPLOAD_MAX_RETRIES: "5"
         run: |
@@ -114,7 +86,8 @@ jobs:
             --json_key '${{ steps.auth.outputs.credentials_file_path }}' \
             --track '${{ inputs.track }}' \
             --version_code '${{ steps.version.outputs.version_code }}' \
-            --skip_upload_changelogs \
+            --skip_upload_metadata \
+            --skip_upload_images --skip_upload_screenshots \
             --skip_upload_apk --skip_upload_aab \
             --changes_not_sent_for_review \
             ${{ inputs.dry_run && '--validate_only' || ' ' }}
@@ -124,5 +97,5 @@ jobs:
           if [ '${{ inputs.dry_run }}' = 'true' ]; then
             echo '## Dry run: nothing was written to Play' >> "$GITHUB_STEP_SUMMARY"
           else
-            echo '## Listing staged as a draft. Press "Send for review" in Play Console.' >> "$GITHUB_STEP_SUMMARY"
+            echo '## Release notes staged as a draft. Press "Send for review" in Play Console.' >> "$GITHUB_STEP_SUMMARY"
           fi
