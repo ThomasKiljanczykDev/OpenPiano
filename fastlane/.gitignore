@@ -1,0 +1,5 @@
+# Rendered by android/tools/gplay-screenshots/export_to_fastlane.sh.
+metadata/android/*/images/phoneScreenshots/
+report.xml
+.bundle/
+vendor/

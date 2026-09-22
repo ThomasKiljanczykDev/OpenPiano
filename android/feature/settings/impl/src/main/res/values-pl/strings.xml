@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_title">Ustawienia</string>
+    <string name="settings_navigate_up">Wstecz</string>
+    <string name="settings_language">Język</string>
+    <string name="settings_language_system_default">Domyślny systemowy</string>
+    <string name="settings_label_mode">Etykiety klawiszy</string>
+    <string name="settings_label_mode_none">Wyłączone</string>
+    <string name="settings_label_mode_c_only">Tylko C</string>
+    <string name="settings_label_mode_all">Wszystkie</string>
+    <string name="settings_visible_keys">Widoczne białe klawisze</string>
+    <string name="settings_reverb">Pogłos</string>
+    <string name="settings_midi_output">Wyjście MIDI</string>
+    <string name="settings_midi_output_connected">Połączono</string>
+    <string name="settings_midi_output_not_connected">Brak połączenia</string>
+    <string name="settings_touch_hit_test_mode">Tryb dotyku</string>
+    <string name="settings_touch_hit_test_mode_point">Punkt</string>
+    <string name="settings_touch_hit_test_mode_area">Obszar</string>
+    <string name="settings_touch_hit_test_mode_unsupported">Ekran dotykowy Twojego urządzenia nie zgłasza rozmiaru dotyku</string>
+    <string name="settings_touch_precision">Precyzja dotyku</string>
+    <string name="settings_privacy_policy">Polityka prywatności</string>
+    <string name="settings_privacy_policy_summary">Sprawdź, jak OpenPiano przetwarza Twoje dane</string>
+    <string name="settings_donate">Postaw mi kawę</string>
+    <string name="settings_donate_summary">Wesprzyj rozwój aplikacji</string>
+</resources>

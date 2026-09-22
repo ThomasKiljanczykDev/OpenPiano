@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="keyboard_octave_down">Oktawa w dół</string>
+    <string name="keyboard_octave_up">Oktawa w górę</string>
+    <string name="keyboard_key_down">Klawisz w dół</string>
+    <string name="keyboard_key_up">Klawisz w górę</string>
+    <string name="keyboard_overview">Podgląd klawiatury, przeciągnij, aby przewinąć</string>
+    <string name="keyboard_settings">Ustawienia</string>
+    <string name="keyboard_loading">Wczytywanie próbek fortepianu</string>
+</resources>

@@ -1,0 +1,39 @@
+OpenPiano transforme votre téléphone ou votre tablette en un vrai
+piano tactile, avec un son à faible latence et un vrai multi-touch —
+jouez des accords, tenez des notes, et glissez entre les touches
+comme sur un clavier physique.
+
+Fonctionnalités :
+
+- Moteur audio à faible latence, réglé pour le plus court délai
+  possible entre le toucher et le son.
+- Multi-touch complet : jouez autant de notes à la fois que vos
+  doigts le permettent, avec maintien pour le sustain et glissando.
+- Largeur du clavier configurable, de 7 à 21 touches blanches
+  visibles, avec un bandeau d'aperçu montrant votre position sur
+  toute l'étendue de 88 touches.
+- Décalage par octave et par touche pour atteindre toute l'étendue
+  du piano.
+- Modes d'étiquette de touche : aucune, do seul, ou tous les noms
+  de note.
+- Sortie MIDI USB — branchez votre appareil à un ordinateur ou une
+  interface audio et jouez une DAW, un synthétiseur,
+  ou tout autre équipement compatible MIDI depuis le clavier de
+  l'application.
+- Un son chaleureux de piano à queue acoustique,
+  échantillonné sur un vrai Yamaha C5 (Salamander Grand Piano,
+  CC BY 3.0), avec réverbération et limiteur.
+- Disponible en anglais, allemand, espagnol, français, polonais,
+  et portugais brésilien.
+
+OpenPiano est un logiciel libre et open source, publié sous la
+licence GNU General Public License v3 ou ultérieure. Le code source
+est disponible sur GitHub : https://github.com/ThomasKiljanczykDev/OpenPiano
+
+Cette version utilise Firebase Analytics (collecte automatique
+uniquement — utilisateurs actifs, pays, ville; aucun événement
+personnalisé, aucun identifiant publicitaire) et Firebase Crashlytics
+pour les rapports de plantage, désactivé dans les builds de débogage.
+Une version sans les deux, pour F-Droid et le téléchargement direct,
+est disponible dans les releases GitHub du projet. Voir la politique
+de confidentialité dans l'application pour tous les détails.

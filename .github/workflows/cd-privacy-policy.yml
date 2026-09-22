@@ -1,0 +1,53 @@
+name: Publish privacy policy
+
+# Serves PRIVACY.md at https://<owner>.github.io/<repo>/privacy/.
+# Requires Settings > Pages > Source = "GitHub Actions".
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "PRIVACY.md"
+      - ".github/workflows/cd-privacy-policy.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Stage site
+        run: |
+          mkdir -p site/privacy
+          {
+            printf -- '---\ntitle: OpenPiano privacy policy\npermalink: /privacy/\n---\n\n'
+            cat PRIVACY.md
+          } > site/privacy/index.md
+          printf -- '---\npermalink: /\n---\n\n[Privacy policy](privacy/)\n' > site/index.md
+
+      - uses: actions/configure-pages@v6
+      - uses: actions/jekyll-build-pages@v1
+        with:
+          source: site
+          destination: _site
+      - uses: actions/upload-pages-artifact@v5
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}privacy/
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

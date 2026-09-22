@@ -1,0 +1,33 @@
+# fdroiddata recipe for https://gitlab.com/fdroid/fdroiddata metadata/.
+# prebuild strips the play flavor's Firebase wiring.
+Categories:
+  - Multimedia
+License: GPL-3.0-or-later
+AuthorName: Thomas Kiljanczyk
+SourceCode: "https://github.com/ThomasKiljanczykDev/OpenPiano"
+IssueTracker: "https://github.com/ThomasKiljanczykDev/OpenPiano/issues"
+
+AutoName: OpenPiano
+
+RepoType: git
+Repo: "https://github.com/ThomasKiljanczykDev/OpenPiano.git"
+
+Builds:
+  - versionName: 1.0.0
+    versionCode: 10000
+    commit: v1.0.0
+    subdir: android/app
+    gradle:
+      - foss
+    rm:
+      - android/app/src/play
+    prebuild:
+      - sed -i -e '/^import .*CrashlyticsExtension/d' -e '/configure<CrashlyticsExtension>/,/^ *}$/d'
+        -e '/google.services/d' -e '/firebase/d' build.gradle.kts
+      - sed -i -e '/firebase/d' -e '/googleServices/d' -e '/google-services/d' ../gradle/libs.versions.toml
+    ndk: 29.0.14206865
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags ^v[0-9.]+$
+CurrentVersion: 1.0.0
+CurrentVersionCode: 10000

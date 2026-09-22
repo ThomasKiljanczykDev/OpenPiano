@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_title">Settings</string>
+    <string name="settings_navigate_up">Navigate up</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_language_system_default">System default</string>
+    <string name="settings_label_mode">Key labels</string>
+    <string name="settings_label_mode_none">Off</string>
+    <string name="settings_label_mode_c_only">C only</string>
+    <string name="settings_label_mode_all">All</string>
+    <string name="settings_visible_keys">Visible white keys</string>
+    <string name="settings_reverb">Reverb</string>
+    <string name="settings_midi_output">MIDI output</string>
+    <string name="settings_midi_output_connected">Connected</string>
+    <string name="settings_midi_output_not_connected">Not connected</string>
+    <string name="settings_touch_hit_test_mode">Touch mode</string>
+    <string name="settings_touch_hit_test_mode_point">Point</string>
+    <string name="settings_touch_hit_test_mode_area">Area</string>
+    <string name="settings_touch_hit_test_mode_unsupported">Your device\'s touchscreen doesn\'t report touch size</string>
+    <string name="settings_touch_precision">Touch precision</string>
+    <string name="settings_privacy_policy">Privacy policy</string>
+    <string name="settings_privacy_policy_summary">Read how OpenPiano handles your data</string>
+    <string name="settings_donate">Buy me a coffee</string>
+    <string name="settings_donate_summary">Support development of this app</string>
+</resources>

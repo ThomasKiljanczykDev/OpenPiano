@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="keyboard_octave_down">Octave en dessous</string>
+    <string name="keyboard_octave_up">Octave au-dessus</string>
+    <string name="keyboard_key_down">Touche en dessous</string>
+    <string name="keyboard_key_up">Touche au-dessus</string>
+    <string name="keyboard_overview">Aperçu du clavier, faites glisser pour défiler</string>
+    <string name="keyboard_settings">Paramètres</string>
+    <string name="keyboard_loading">Chargement des échantillons de piano</string>
+</resources>

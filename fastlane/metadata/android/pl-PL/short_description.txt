@@ -1,0 +1,1 @@
+Pianino dotykowe o niskim opóźnieniu z wyjściem MIDI USB

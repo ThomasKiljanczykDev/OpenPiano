@@ -1,0 +1,3 @@
+Lançamento inicial: piano touchscreen de baixa latência, multitoque,
+número de teclas e rótulos configuráveis, deslocamento de
+oitava/tecla, saída MIDI USB, reverberação e limitador, 6 idiomas.

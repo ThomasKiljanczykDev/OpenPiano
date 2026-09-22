@@ -1,0 +1,63 @@
+comments:
+  active: true
+  UndocumentedPublicClass:
+    active: false
+  UndocumentedPublicFunction:
+    active: false
+  UndocumentedPublicProperty:
+    active: false
+
+complexity:
+  LongParameterList:
+    allowedFunctionParameters: 8
+    allowedConstructorParameters: 10
+  TooManyFunctions:
+    active: true
+    allowedFunctionsPerFile: 30
+    allowedFunctionsPerClass: 30
+    allowedFunctionsPerObject: 30
+    ignoreAnnotatedFunctions: ['Composable']
+
+ktlint:
+  active: true
+  ClassSignature:
+    forceMultilineWhenParameterCountGreaterOrEqualThan: '2'
+  FunctionSignature:
+    active: false
+  FunctionNaming:
+    active: false
+  PackageName:
+    active: false
+  Filename:
+    active: false
+  MaximumLineLength:
+    maxLineLength: 120
+
+naming:
+  PackageNaming:
+    packagePattern: '[a-z]+(\.[a-z_][A-Za-z0-9_]*)*'
+  FunctionNaming:
+    ignoreAnnotated: ['Composable']
+  TopLevelPropertyNaming:
+    constantPattern: '[A-Z][_A-Za-z0-9]*'
+
+style:
+  active: true
+  ForbiddenComment:
+    active: true
+    comments:
+      - reason: 'Comments must not narrate the conversation that produced the change.'
+        value: 'as requested'
+      - reason: 'Comments must not narrate the conversation that produced the change.'
+        value: 'per the user'
+      - reason: 'Comments must not narrate the conversation that produced the change.'
+        value: 'phase '
+      - reason: 'Unresolved work must be tracked outside the source.'
+        value: 'FIXME:'
+  MagicNumber:
+    active: true
+    ignoreAnnotated: ['Composable', 'Preview']
+    ignorePropertyDeclaration: true
+    ignoreCompanionObjectPropertyDeclaration: true
+  MaxLineLength:
+    maxLineLength: 120

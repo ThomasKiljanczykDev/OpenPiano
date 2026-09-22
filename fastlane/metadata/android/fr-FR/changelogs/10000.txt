@@ -1,0 +1,4 @@
+Version initiale : piano tactile à faible latence, multi-touch,
+nombre de touches et étiquettes configurables, décalage
+octave/touche, sortie MIDI USB, réverbération et limiteur,
+6 langues.

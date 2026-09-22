@@ -1,0 +1,4 @@
+source "https://rubygems.org"
+
+# 2.232.0 is the floor for Workload Identity Federation credentials (fastlane/fastlane#29490).
+gem "fastlane", "~> 2.232"

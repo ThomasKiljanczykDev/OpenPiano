@@ -1,0 +1,36 @@
+OpenPiano turns your phone or tablet into a real touchscreen piano,
+with low-latency sound and true multi-touch — play chords,
+hold notes, and slide between keys just like on a physical keyboard.
+
+Features:
+
+- Low-latency audio engine, tuned for the shortest possible delay
+  between touch and sound.
+- Full multi-touch: play as many notes at once as your fingers allow,
+  with press-and-hold sustain and glissando.
+- Configurable keyboard width, from 7 to 21 visible white keys,
+  with an overview strip showing your position across the full
+  88-key range.
+- Octave and single-key shift controls to reach the full range of the
+  piano.
+- Key label modes: off, C-only, or every note name.
+- USB MIDI output — plug your device into a computer or audio
+  interface and play a DAW, synth,
+  or any other MIDI-capable gear with the app's keyboard.
+- A warm acoustic grand piano sound,
+  sampled from a real Yamaha C5 (Salamander Grand Piano,
+  CC BY 3.0), plus reverb and a limiter.
+- Available in English, German, Spanish, French, Polish,
+  and Brazilian Portuguese.
+
+OpenPiano is free and open source software, released under the GNU
+General Public License v3 or later. The source code is available on
+GitHub: https://github.com/ThomasKiljanczykDev/OpenPiano
+
+This build uses Firebase Analytics (automatic collection only —
+active users, country, city; no custom events,
+no advertising ID) and Firebase Crashlytics for crash reports,
+disabled in debug builds. A build with neither,
+for F-Droid and direct download,
+is available from the project's GitHub releases. See the in-app
+privacy policy for full details.
