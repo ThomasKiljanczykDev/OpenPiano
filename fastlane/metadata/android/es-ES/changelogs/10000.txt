@@ -1,3 +1,10 @@
-Lanzamiento inicial: piano táctil de baja latencia, multitáctil,
-número de teclas y etiquetas configurables, desplazamiento de
-octava/tecla, salida MIDI USB, reverb y limitador, 6 idiomas.
+Lanzamiento inicial.
+
+• Sin anuncios, sin compras dentro de la app
+• Motor de audio de baja latencia
+• Multitáctil completo con sostenido y glissando
+• Número de teclas y etiquetas configurables
+• Desplazamiento por octava y por tecla
+• Salida MIDI por USB
+• Sonido de piano de cola con reverb y limitador
+• 6 idiomas

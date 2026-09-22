@@ -1,1 +1,1 @@
-Piano táctil de baja latencia con salida MIDI USB
+Piano táctil de baja latencia sin anuncios, con salida MIDI USB

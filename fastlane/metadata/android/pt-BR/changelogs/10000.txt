@@ -1,3 +1,10 @@
-Lançamento inicial: piano touchscreen de baixa latência, multitoque,
-número de teclas e rótulos configuráveis, deslocamento de
-oitava/tecla, saída MIDI USB, reverberação e limitador, 6 idiomas.
+Lançamento inicial.
+
+• Sem anúncios, sem compras no app
+• Motor de áudio de baixa latência
+• Multitoque completo com sustentação e glissando
+• Número de teclas e rótulos configuráveis
+• Deslocamento por oitava e por tecla
+• Saída MIDI por USB
+• Som de piano de cauda com reverberação e limitador
+• 6 idiomas

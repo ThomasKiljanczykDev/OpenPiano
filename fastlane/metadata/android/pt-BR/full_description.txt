@@ -1,39 +1,18 @@
-O OpenPiano transforma seu celular ou tablet em um piano touchscreen
-de verdade, com som de baixa latência e multitoque real — toque
-acordes, sustente notas e deslize entre as teclas,
-assim como em um teclado físico.
+O OpenPiano transforma seu celular ou tablet em um piano touchscreen de verdade, com som de baixa latência e multitoque real — toque acordes, sustente notas e deslize entre as teclas, assim como em um teclado físico.
+Sem anúncios, nunca — nada interrompe sua execução.
 
 Recursos:
 
-- Motor de áudio de baixa latência, ajustado para o menor atraso
-  possível entre o toque e o som.
-- Multitoque completo: toque quantas notas ao mesmo tempo seus dedos
-  permitirem, com sustentação ao manter pressionado e glissando.
-- Largura do teclado configurável, de 7 a 21 teclas brancas
-  visíveis, com uma faixa de visão geral mostrando sua posição no
-  intervalo completo de 88 teclas.
-- Deslocamento por oitava e por tecla individual,
-  para alcançar todo o intervalo do piano.
-- Modos de rótulo de tecla: nenhum, apenas Dó, ou todos os nomes
-  das notas.
-- Saída MIDI por USB — conecte seu dispositivo a um computador ou
-  interface de áudio e toque uma DAW, um sintetizador,
-  ou qualquer outro equipamento compatível com MIDI a partir do
-  teclado do app.
-- Um som quente de piano de cauda acústico,
-  amostrado de um Yamaha C5 real (Salamander Grand Piano,
-  CC BY 3.0), com reverberação e limitador.
-- Disponível em inglês, alemão, espanhol, francês, polonês,
-  e português brasileiro.
+• Sem anúncios, sem compras no app, sem conta.
+• Motor de áudio de baixa latência, ajustado para o menor atraso possível entre o toque e o som.
+• Multitoque completo: toque quantas notas ao mesmo tempo seus dedos permitirem, com sustentação ao manter pressionado e glissando.
+• Largura do teclado configurável, de 7 a 21 teclas brancas visíveis, com uma faixa de visão geral mostrando sua posição no intervalo completo de 88 teclas.
+• Deslocamento por oitava e por tecla individual, para alcançar todo o intervalo do piano.
+• Modos de rótulo de tecla: nenhum, apenas Dó, ou todos os nomes das notas.
+• Saída MIDI por USB — conecte seu dispositivo a um computador ou interface de áudio e toque uma DAW, um sintetizador, ou qualquer outro equipamento compatível com MIDI a partir do teclado do app.
+• Um som quente de piano de cauda acústico, amostrado de um Yamaha C5 real (Salamander Grand Piano, CC BY 3.0), com reverberação e limitador.
+• Disponível em inglês, alemão, espanhol, francês, polonês, e português brasileiro.
 
-O OpenPiano é um software livre e de código aberto,
-lançado sob a GNU General Public License v3 ou posterior. O código
-fonte está disponível no GitHub: https://github.com/ThomasKiljanczykDev/OpenPiano
+O OpenPiano é um software livre e de código aberto, lançado sob a GNU General Public License v3 ou posterior. O código fonte está disponível no GitHub: https://github.com/ThomasKiljanczykDev/OpenPiano
 
-Esta versão usa o Firebase Analytics (apenas coleta automática —
-usuários ativos, país, cidade; sem eventos personalizados,
-sem ID de publicidade) e o Firebase Crashlytics para relatórios de
-falhas, desativado em builds de depuração. Uma versão sem nenhum
-dos dois, para o F-Droid e download direto,
-está disponível nos releases do GitHub do projeto. Veja a política
-de privacidade dentro do app para todos os detalhes.
+Esta versão usa o Firebase Analytics (apenas coleta automática — usuários ativos, país, cidade; sem eventos personalizados, sem ID de publicidade) e o Firebase Crashlytics para relatórios de falhas, desativado em builds de depuração. Uma versão sem nenhum dos dois, para o F-Droid e download direto, está disponível nos releases do GitHub do projeto. Veja a política de privacidade dentro do app para todos os detalhes.

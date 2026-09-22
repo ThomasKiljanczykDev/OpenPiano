@@ -1,15 +1,20 @@
 ![OpenPiano](docs/images/OpenPiano-banner.png "OpenPiano")
 
-<img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" height="70" alt="Get it on Google Play" style="filter: grayscale(100%); opacity: 0.6;">
+<img src="docs/images/google-play-badge-unavailable.png" height="60" alt="Not yet available on Google Play">
+<img src="docs/images/fdroid-badge-unavailable.png" height="60" alt="Not yet available on F-Droid">
+<a href="https://buymeacoffee.com/thomas.kiljanczyk.dev"><img src="https://img.shields.io/badge/Buy%20me%20a%20coffee-FFDD00?logo=buymeacoffee&logoColor=black" height="45" alt="Buy me a coffee"></a>
 
-[<img src="https://img.shields.io/badge/Buy%20me%20a%20coffee-FFDD00?logo=buymeacoffee&logoColor=black" height="40" alt="Buy me a coffee">](https://buymeacoffee.com/thomas.kiljanczyk.dev)
-
-**Coming soon on Google Play**
+[![CI (Android)](https://github.com/ThomasKiljanczykDev/OpenPiano/actions/workflows/ci-android.yml/badge.svg?branch=main)](https://github.com/ThomasKiljanczykDev/OpenPiano/actions/workflows/ci-android.yml)
+[![Publish privacy policy](https://github.com/ThomasKiljanczykDev/OpenPiano/actions/workflows/cd-privacy-policy.yml/badge.svg?branch=main)](https://github.com/ThomasKiljanczykDev/OpenPiano/actions/workflows/cd-privacy-policy.yml)
+[![License: GPL v3+](https://img.shields.io/badge/License-GPLv3%2B-blue.svg)](LICENSE)
 
 # OpenPiano
 
 An open source touchscreen piano keyboard app with low-latency sound and USB MIDI output,
 so it can also drive external gear or a DAW.
+
+No ads, no in-app purchases, no account.
+It exists because every "free" piano app I tried interrupted playing with full-screen ads.
 
 ## Not affiliated
 

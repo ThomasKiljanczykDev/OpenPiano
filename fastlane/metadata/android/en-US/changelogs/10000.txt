@@ -1,3 +1,10 @@
-Initial release: low-latency touchscreen piano keyboard, multi-touch,
-configurable key count and labels, octave/key shift, USB MIDI output,
-reverb and limiter, 6 languages.
+Initial release.
+
+• No ads, no in-app purchases
+• Low-latency audio engine
+• Full multi-touch with sustain and glissando
+• Configurable key count and labels
+• Octave and single-key shift
+• USB MIDI output
+• Acoustic grand piano sound with reverb and limiter
+• 6 languages

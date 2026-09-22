@@ -1,39 +1,18 @@
-OpenPiano zmienia telefon lub tablet w prawdziwe pianino dotykowe,
-z dźwiękiem o niskim opóźnieniu i pełną obsługą wielu dotknięć
-naraz — graj akordy, przytrzymuj dźwięki i przesuwaj palcem między
-klawiszami, tak jak na fizycznej klawiaturze.
+OpenPiano zmienia telefon lub tablet w prawdziwe pianino dotykowe, z dźwiękiem o niskim opóźnieniu i pełną obsługą wielu dotknięć naraz — graj akordy, przytrzymuj dźwięki i przesuwaj palcem między klawiszami, tak jak na fizycznej klawiaturze.
+Żadnych reklam — nic nie przerywa gry.
 
 Funkcje:
 
-- Silnik audio o niskim opóźnieniu, dopracowany pod jak najkrótszy
-  czas między dotknięciem a dźwiękiem.
-- Pełna obsługa wielu dotknięć: graj tyle dźwięków naraz, na ile
-  pozwalają twoje palce, z przytrzymaniem jako podtrzymaniem dźwięku
-  i glissando.
-- Konfigurowalna szerokość klawiatury, od 7 do 21 widocznych białych
-  klawiszy, z paskiem podglądu pokazującym twoją pozycję na całym
-  zakresie 88 klawiszy.
-- Przesunięcie o oktawę i o pojedynczy klawisz,
-  by dosięgnąć całego zakresu pianina.
-- Tryby etykiet klawiszy: brak, tylko C, lub wszystkie nazwy
-  dźwięków.
-- Wyjście MIDI przez USB — podłącz urządzenie do komputera lub
-  interfejsu audio i steruj DAW-em, syntezatorem,
-  lub innym sprzętem zgodnym z MIDI z klawiatury aplikacji.
-- Ciepłe brzmienie akustycznego pianina koncertowego,
-  nagrane z prawdziwego Yamaha C5 (Salamander Grand Piano,
-  CC BY 3.0), z pogłosem i limiterem.
-- Dostępne w językach: angielskim, niemieckim, hiszpańskim,
-  francuskim, polskim, i brazylijskim portugalskim.
+• Bez reklam, bez zakupów w aplikacji, bez konta.
+• Silnik audio o niskim opóźnieniu, dopracowany pod jak najkrótszy czas między dotknięciem a dźwiękiem.
+• Pełna obsługa wielu dotknięć: graj tyle dźwięków naraz, na ile pozwalają twoje palce, z przytrzymaniem jako podtrzymaniem dźwięku i glissando.
+• Konfigurowalna szerokość klawiatury, od 7 do 21 widocznych białych klawiszy, z paskiem podglądu pokazującym twoją pozycję na całym zakresie 88 klawiszy.
+• Przesunięcie o oktawę i o pojedynczy klawisz, by dosięgnąć całego zakresu pianina.
+• Tryby etykiet klawiszy: brak, tylko C, lub wszystkie nazwy dźwięków.
+• Wyjście MIDI przez USB — podłącz urządzenie do komputera lub interfejsu audio i steruj DAW-em, syntezatorem, lub innym sprzętem zgodnym z MIDI z klawiatury aplikacji.
+• Ciepłe brzmienie akustycznego pianina koncertowego, nagrane z prawdziwego Yamaha C5 (Salamander Grand Piano, CC BY 3.0), z pogłosem i limiterem.
+• Dostępne w językach: angielskim, niemieckim, hiszpańskim, francuskim, polskim, i brazylijskim portugalskim.
 
-OpenPiano to wolne i otwarte oprogramowanie, wydane na licencji GNU
-General Public License w wersji 3 lub późniejszej. Kod źródłowy jest
-dostępny na GitHubie: https://github.com/ThomasKiljanczykDev/OpenPiano
+OpenPiano to wolne i otwarte oprogramowanie, wydane na licencji GNU General Public License w wersji 3 lub późniejszej. Kod źródłowy jest dostępny na GitHubie: https://github.com/ThomasKiljanczykDev/OpenPiano
 
-Ta wersja korzysta z Firebase Analytics (tylko automatyczne
-zbieranie danych — aktywni użytkownicy, kraj, miasto; brak
-niestandardowych zdarzeń, brak identyfikatora reklamowego) oraz
-Firebase Crashlytics do raportów awarii, wyłączonego w wersjach
-debugowania. Wersja bez żadnego z nich, dla F-Droid i pobrania
-bezpośredniego, jest dostępna w wydaniach GitHub projektu. Pełne
-informacje znajdziesz w polityce prywatności w aplikacji.
+Ta wersja korzysta z Firebase Analytics (tylko automatyczne zbieranie danych — aktywni użytkownicy, kraj, miasto; brak niestandardowych zdarzeń, brak identyfikatora reklamowego) oraz Firebase Crashlytics do raportów awarii, wyłączonego w wersjach debugowania. Wersja bez żadnego z nich, dla F-Droid i pobrania bezpośredniego, jest dostępna w wydaniach GitHub projektu. Pełne informacje znajdziesz w polityce prywatności w aplikacji.

@@ -1,4 +1,10 @@
-Wydanie początkowe: pianino dotykowe o niskim opóźnieniu, wiele
-dotknięć naraz, konfigurowalna liczba klawiszy i etykiety,
-przesunięcie oktawy/klawisza, wyjście MIDI USB, pogłos i limiter,
-6 języków.
+Wydanie początkowe.
+
+• Bez reklam, bez zakupów w aplikacji
+• Silnik audio o niskim opóźnieniu
+• Pełna obsługa wielu dotknięć z podtrzymaniem i glissando
+• Konfigurowalna liczba klawiszy i etykiety
+• Przesunięcie o oktawę i o pojedynczy klawisz
+• Wyjście MIDI przez USB
+• Brzmienie pianina koncertowego z pogłosem i limiterem
+• 6 języków
