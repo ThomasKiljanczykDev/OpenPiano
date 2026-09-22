@@ -1,8 +1,10 @@
 ![OpenPiano](../docs/images/OpenPiano-banner.png "OpenPiano")
 
-<img src="../docs/images/google-play-badge-unavailable.png" height="60" alt="Not yet available on Google Play">
-<img src="../docs/images/fdroid-badge-unavailable.png" height="60" alt="Not yet available on F-Droid">
-<a href="https://buymeacoffee.com/thomas.kiljanczyk.dev"><img src="https://img.shields.io/badge/Buy%20me%20a%20coffee-FFDD00?logo=buymeacoffee&logoColor=black" height="45" alt="Buy me a coffee"></a>
+<p>
+  <img src="../docs/images/google-play-badge-unavailable.png" height="60" alt="Not yet available on Google Play">
+  <img src="../docs/images/fdroid-badge-unavailable.png" height="60" alt="Not yet available on F-Droid">
+  <a href="https://buymeacoffee.com/thomas.kiljanczyk.dev"><img src="https://img.shields.io/badge/Buy%20me%20a%20coffee-FFDD00?logo=buymeacoffee&logoColor=black" height="45" alt="Buy me a coffee"></a>
+</p>
 
 [![CI (Android)](https://github.com/ThomasKiljanczykDev/OpenPiano/actions/workflows/ci-android.yml/badge.svg?branch=main)](https://github.com/ThomasKiljanczykDev/OpenPiano/actions/workflows/ci-android.yml)
 [![Publish privacy policy](https://github.com/ThomasKiljanczykDev/OpenPiano/actions/workflows/cd-privacy-policy.yml/badge.svg?branch=main)](https://github.com/ThomasKiljanczykDev/OpenPiano/actions/workflows/cd-privacy-policy.yml)
