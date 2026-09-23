@@ -1,0 +1,27 @@
+name: App version
+description: >-
+  Compiles AppVersion.kt and exposes its versionName and versionCode,
+  so workflows never re-derive the version code formula.
+  The caller is responsible for actions/checkout before invoking this action.
+
+outputs:
+  version:
+    description: versionName, e.g. 1.2.3
+    value: ${{ steps.read.outputs.version }}
+  version_code:
+    description: versionCode
+    value: ${{ steps.read.outputs.version_code }}
+
+runs:
+  using: composite
+  steps:
+    - name: Read AppVersion.kt
+      id: read
+      shell: bash
+      run: |
+        set -euo pipefail
+        out="${RUNNER_TEMP}/app-version"
+        kotlinc -nowarn -d "${out}" \
+          "${GITHUB_WORKSPACE}"/android/build-logic/convention/src/main/kotlin/dev/thomas_kiljanczyk/openpiano/buildlogic/AppVersion.kt \
+          "${GITHUB_ACTION_PATH}/PrintAppVersion.kt"
+        kotlin -cp "${out}" PrintAppVersionKt | tee -a "$GITHUB_OUTPUT"

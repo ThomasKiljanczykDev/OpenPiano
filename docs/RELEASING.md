@@ -3,8 +3,8 @@
 ## Release steps
 
 1. Bump `MAJOR`/`MINOR`/`PATCH` in `android/build-logic/convention/src/main/kotlin/dev/thomas_kiljanczyk/openpiano/buildlogic/AppVersion.kt`.
-   `versionCode = MAJOR * 10000 + MINOR * 100 + PATCH`;
-   `1.0.0` is `10000`.
+   `versionCode = MAJOR * 1000000 + MINOR * 1000 + PATCH`;
+   `1.0.1` is `1000001`. `1.0.0` shipped as `10000` under the previous `MAJOR * 10000 + MINOR * 100 + PATCH` scheme.
 2. Add `fastlane/metadata/android/<locale>/changelogs/<versionCode>.txt` for every locale,
    at most 500 characters.
 3. Verify locally:
