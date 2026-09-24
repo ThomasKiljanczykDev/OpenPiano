@@ -38,6 +38,7 @@ fun Project.configureKotlinAndroid(extension: CommonExtension) {
     }
 }
 
+@Suppress("UnstableApiUsage")
 fun configureManagedDevices(extension: CommonExtension) {
     extension.testOptions.managedDevices.allDevices.maybeCreate(
         "pixel6Api34",
