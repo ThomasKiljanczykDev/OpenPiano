@@ -12,6 +12,8 @@ sealed interface MidiOutputEvent {
     ) : MidiOutputEvent
 
     data class NoteOff(val note: Int) : MidiOutputEvent
+
+    data object AllNotesOff : MidiOutputEvent
 }
 
 class FakeMidiOutputPort : MidiOutputPort {
@@ -34,5 +36,9 @@ class FakeMidiOutputPort : MidiOutputPort {
 
     override fun noteOff(note: Int) {
         synchronized(recorded) { recorded.add(MidiOutputEvent.NoteOff(note)) }
+    }
+
+    override fun allNotesOff() {
+        synchronized(recorded) { recorded.add(MidiOutputEvent.AllNotesOff) }
     }
 }

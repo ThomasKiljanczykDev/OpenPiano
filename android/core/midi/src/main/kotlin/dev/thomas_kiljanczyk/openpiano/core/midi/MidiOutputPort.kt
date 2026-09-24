@@ -8,4 +8,6 @@ interface MidiOutputPort {
     fun noteOn(note: Int, velocity: Int)
 
     fun noteOff(note: Int)
+
+    fun allNotesOff()
 }

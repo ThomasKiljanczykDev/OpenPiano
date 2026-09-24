@@ -1,5 +1,8 @@
 package dev.thomas_kiljanczyk.openpiano.feature.keyboard.impl
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -30,6 +33,7 @@ class KeyboardScreenMidiOutputTest {
 
     private val engine = FakeAudioEngine()
     private val midiOutputPort = FakeMidiOutputPort()
+    private var shown by mutableStateOf(true)
 
     private fun setContent(midiOutputEnabled: Boolean) {
         val uiState = KeyboardUiState(
@@ -42,14 +46,16 @@ class KeyboardScreenMidiOutputTest {
         )
         composeTestRule.setContent {
             OpenPianoTheme(dynamicColor = false) {
-                KeyboardScreen(
-                    uiState = uiState,
-                    engine = engine,
-                    midiOutputPort = midiOutputPort,
-                    onShiftKeys = {},
-                    onLowestNoteChange = {},
-                    onOpenSettings = {},
-                )
+                if (shown) {
+                    KeyboardScreen(
+                        uiState = uiState,
+                        engine = engine,
+                        midiOutputPort = midiOutputPort,
+                        onShiftKeys = {},
+                        onLowestNoteChange = {},
+                        onOpenSettings = {},
+                    )
+                }
             }
         }
     }
@@ -85,5 +91,29 @@ class KeyboardScreenMidiOutputTest {
             ),
             midiOutputPort.events,
         )
+    }
+
+    @Test
+    fun leavingTheScreenSilencesTheSynthAndMidiOutput() {
+        setContent(midiOutputEnabled = true)
+        composeTestRule.waitForIdle()
+
+        shown = false
+        composeTestRule.waitForIdle()
+
+        assertEquals(listOf(AudioEvent.AllNotesOff), engine.events)
+        assertEquals(listOf(MidiOutputEvent.AllNotesOff), midiOutputPort.events)
+    }
+
+    @Test
+    fun leavingTheScreenWithMidiOutputDisabledOnlySilencesTheSynth() {
+        setContent(midiOutputEnabled = false)
+        composeTestRule.waitForIdle()
+
+        shown = false
+        composeTestRule.waitForIdle()
+
+        assertEquals(listOf(AudioEvent.AllNotesOff), engine.events)
+        assertEquals(emptyList<MidiOutputEvent>(), midiOutputPort.events)
     }
 }

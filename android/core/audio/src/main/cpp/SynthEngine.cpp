@@ -12,9 +12,12 @@ namespace openpiano {
 
 namespace {
 constexpr int kChannel = 0;
+constexpr int kMidiChannels = 16;
 } // namespace
 
-SynthEngine::~SynthEngine() { unload(); }
+SynthEngine::~SynthEngine() {
+    unload();
+}
 
 bool SynthEngine::load(const void* data, size_t size) {
     unload();
@@ -61,6 +64,13 @@ void SynthEngine::apply(const MidiMessage& message) {
     case kNoteOff:
         tsf_channel_note_off(tsf_, message.channel(), message.data1());
         break;
+    case kControlChange:
+        if (message.data1() == kCcAllNotesOff) {
+            tsf_channel_note_off_all(tsf_, message.channel());
+        } else if (message.data1() == kCcAllSoundOff) {
+            tsf_channel_sounds_off_all(tsf_, message.channel());
+        }
+        break;
     default:
         break;
     }
@@ -81,9 +91,12 @@ void SynthEngine::render(float* interleavedStereo, int32_t numFrames) {
     }
 }
 
-void SynthEngine::allNotesOff() {
-    if (tsf_ != nullptr) {
-        tsf_note_off_all(tsf_);
+void SynthEngine::allSoundsOff() {
+    if (tsf_ == nullptr) {
+        return;
+    }
+    for (int channel = 0; channel < kMidiChannels; ++channel) {
+        tsf_channel_sounds_off_all(tsf_, channel);
     }
 }
 

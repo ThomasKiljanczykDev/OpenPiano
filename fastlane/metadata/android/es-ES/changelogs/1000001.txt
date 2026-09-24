@@ -1,0 +1,9 @@
+Corrección de errores y mejoras de estabilidad.
+
+• Las notas ya no se quedan sonando al abrir los ajustes o desplazar el teclado
+• Multitáctil más preciso, también con dos dedos en una tecla
+• Los cambios de idioma se aplican de forma fiable
+• Los diálogos de ajustes se desplazan en pantallas pequeñas
+• La barra de estado sigue el modo oscuro
+• Salida MIDI por USB más fiable
+• Corregidos cierres inesperados poco frecuentes al iniciar y al abrir enlaces

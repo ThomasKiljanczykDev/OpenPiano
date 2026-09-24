@@ -113,7 +113,7 @@ class KeyboardLayout(
             }
         }
 
-        return notes
+        return notes.ifEmpty { setOfNotNull(noteAt(x, y)) }
     }
 
     private fun nextWhite(note: Int): Int {

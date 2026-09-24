@@ -22,8 +22,8 @@ and a root `.idea/` is ignored outright. `PLAN.md` is the v1 spec; it is authori
 | `core:common` | Dispatcher qualifiers, `@ApplicationScope`, `allowingThreadDiskReads` StrictMode scoping helper |
 | `core:designsystem` | Theme, color, type, key-color tokens |
 | `core:ui` | Shared composables |
-| `core:datastore-proto` | `keyboard_settings.proto` + serializer |
-| `core:data` | `KeyboardSettingsRepository` over DataStore |
+| `core:datastore-proto` | `user_preferences.proto` + serializer |
+| `core:data` | `UserPreferencesRepository` over DataStore |
 | `core:audio` | Oboe + TSF + JNI. `AudioEngine` interface, `OboeAudioEngine`, Hilt module, SF3 asset |
 | `core:analytics` | `AnalyticsHelper` interface. No Firebase dependency — see "Product flavors" below |
 | `core:midi` | MIDI I/O support |

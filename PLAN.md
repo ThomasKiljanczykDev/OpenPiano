@@ -216,8 +216,8 @@ CI `android-setup` action drops the `google-services.json` stub step accordingly
 | `core:common` | Dispatcher qualifiers, `@ApplicationScope` |
 | `core:designsystem` | Theme, color, type, key-color tokens |
 | `core:ui` | Shared composables |
-| `core:datastore-proto` | `keyboard_settings.proto` + serializer |
-| `core:data` | `KeyboardSettingsRepository` over DataStore |
+| `core:datastore-proto` | `user_preferences.proto` + serializer |
+| `core:data` | `UserPreferencesRepository` over DataStore |
 | `core:audio` | Oboe + TSF + JNI. `AudioEngine` interface, `OboeAudioEngine`, Hilt module, SF3 asset |
 | `feature:keyboard:impl` | Compose keyboard, `KeyboardViewModel`, navigation |
 | `app` | `OpenPianoApplication`, `MainActivity`, NavHost |
@@ -344,8 +344,8 @@ They must never be routed through a coroutine, `Flow`,
 or the ViewModel — that would put a dispatcher hop and a recomposition in the latency path.
 The UI's pointer handler calls the engine directly.
 
-Lifecycle: `start()` on `ON_START`, `stop()` on `ON_STOP`, native destroy in `onCleared`/process death.
-Engine is an `@Singleton`.
+Lifecycle: `start()` on the process `ON_START`, `stop()` on the process `ON_STOP` (`ProcessLifecycleOwner`), never per-activity.
+Engine is an `@Singleton`; the native engine and the decoded soundfont live for the process and are freed at process death.
 
 ## 6. `feature:keyboard:impl`
 
@@ -407,9 +407,9 @@ Deferred to v2: two-row split keyboard, sustain latch, Y-position velocity, pitc
 
 ### 6.4 Settings
 
-`keyboard_settings.proto`:
+`user_preferences.proto`:
 ```proto
-message KeyboardSettings {
+message UserPreferences {
   reserved 2;                     // was lowest_octave, replaced by lowest_note
   int32 visible_white_keys = 1;   // default 10
   KeyLabelMode label_mode  = 3;   // default LABEL_C_ONLY
@@ -564,6 +564,6 @@ no new thread, and no interaction with the audio thread or its lock-free ring bu
 This keeps the §2.2 warning (an `AMidi`-style blocking send must never happen on the audio thread) satisfied by construction,
 since the MIDI-out path never touches that thread at all.
 
-**Settings.** `keyboard_settings.proto` gained `midi_output_enabled` (bool, default false, field 6).
+**Settings.** `user_preferences.proto` gained `midi_output_enabled` (bool, default false, field 6).
 No output-channel selector yet — output is hardcoded to channel 0,
 matching the synth's existing hardcoded `CHANNEL = 0`.

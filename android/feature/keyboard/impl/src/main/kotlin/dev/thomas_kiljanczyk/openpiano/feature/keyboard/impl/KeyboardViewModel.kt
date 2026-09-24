@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.thomas_kiljanczyk.openpiano.core.audio.AudioEngine
-import dev.thomas_kiljanczyk.openpiano.core.data.repository.KeyboardSettingsRepository
+import dev.thomas_kiljanczyk.openpiano.core.data.repository.UserPreferencesRepository
 import dev.thomas_kiljanczyk.openpiano.core.data.touch.TouchAreaSupport
 import dev.thomas_kiljanczyk.openpiano.core.midi.MidiOutputPort
 import dev.thomas_kiljanczyk.openpiano.core.model.Piano
@@ -25,7 +25,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class KeyboardViewModel @Inject constructor(
-    private val settingsRepository: KeyboardSettingsRepository,
+    private val settingsRepository: UserPreferencesRepository,
     val audioEngine: AudioEngine,
     val midiOutputPort: MidiOutputPort,
     touchAreaSupport: TouchAreaSupport,
@@ -33,7 +33,7 @@ class KeyboardViewModel @Inject constructor(
 
     val uiState: StateFlow<KeyboardUiState> =
         combine(
-            settingsRepository.settings,
+            settingsRepository.keyboardSettings,
             audioEngine.isReady,
             midiOutputPort.isConnected,
             flowOf(touchAreaSupport.isSupported),
@@ -47,7 +47,7 @@ class KeyboardViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            settingsRepository.settings
+            settingsRepository.keyboardSettings
                 .map { it.reverbEnabled }
                 .distinctUntilChanged()
                 .collect(audioEngine::setReverbEnabled)

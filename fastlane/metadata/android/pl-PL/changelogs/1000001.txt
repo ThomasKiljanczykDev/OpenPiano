@@ -1,0 +1,9 @@
+Poprawki błędów i większa stabilność.
+
+• Dźwięki nie zawieszają się już po otwarciu ustawień lub przesunięciu klawiatury
+• Dokładniejsza obsługa wielu dotknięć, także dwóch palców na jednym klawiszu
+• Zmiana języka działa niezawodnie
+• Okna dialogowe ustawień można przewijać na małych ekranach
+• Pasek stanu dostosowuje się do trybu ciemnego
+• Stabilniejsze wyjście USB MIDI
+• Naprawiono rzadkie awarie przy uruchamianiu i otwieraniu linków

@@ -6,3 +6,7 @@ plugins {
 android {
     namespace = "dev.thomas_kiljanczyk.openpiano.core.analytics"
 }
+
+dependencies {
+    testImplementation(libs.junit)
+}

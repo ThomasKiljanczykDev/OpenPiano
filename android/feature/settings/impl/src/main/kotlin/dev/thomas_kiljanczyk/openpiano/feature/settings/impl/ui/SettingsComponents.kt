@@ -37,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import kotlin.math.roundToInt
 
 private val SettingsTileMinHeight = 64.dp
 
@@ -205,6 +206,7 @@ fun SettingsCheckbox(
         Text(
             text = title,
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+            modifier = Modifier.weight(1f).padding(end = 16.dp),
         )
         Checkbox(
             checked = checked,
@@ -231,6 +233,9 @@ fun SettingsSlider(
     valueLabel: (Int) -> String = Int::toString,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
+    // Holds the drag position, and the committed value until the store echoes it back.
+    var pending by remember(value) { mutableStateOf<Float?>(null) }
+    val shownValue = pending?.roundToInt() ?: value
 
     Column(
         modifier = modifier
@@ -249,8 +254,16 @@ fun SettingsSlider(
         ) {
             CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides 0.dp) {
                 Slider(
-                    value = value.toFloat(),
-                    onValueChange = { onValueChange(it.toInt()) },
+                    value = pending ?: value.toFloat(),
+                    onValueChange = { pending = it },
+                    onValueChangeFinished = {
+                        val committed = pending?.roundToInt()
+                        if (committed == null || committed == value) {
+                            pending = null
+                        } else {
+                            onValueChange(committed)
+                        }
+                    },
                     valueRange = valueRange.first.toFloat()..valueRange.last.toFloat(),
                     steps = valueRange.last - valueRange.first - 1,
                     interactionSource = interactionSource,
@@ -267,7 +280,7 @@ fun SettingsSlider(
                 )
             }
             Text(
-                text = valueLabel(value),
+                text = valueLabel(shownValue),
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(start = 16.dp),
             )

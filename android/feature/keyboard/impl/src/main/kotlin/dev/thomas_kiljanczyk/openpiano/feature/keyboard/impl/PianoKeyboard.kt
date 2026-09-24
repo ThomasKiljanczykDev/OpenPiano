@@ -1,12 +1,16 @@
 package dev.thomas_kiljanczyk.openpiano.feature.keyboard.impl
 
+import android.view.MotionEvent
+import androidx.collection.MutableLongSet
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -19,9 +23,10 @@ import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerId
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.changedToDownIgnoreConsumed
-import androidx.compose.ui.input.pointer.changedToUpIgnoreConsumed
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChanged
+import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.TextStyle
@@ -37,6 +42,7 @@ import dev.thomas_kiljanczyk.openpiano.core.model.Note
 
 private const val LABEL_TEXT_SIZE_SP = 11
 private const val LABEL_BOTTOM_PADDING = 12f
+private const val MIDI_NOTE_COUNT = 128
 
 /**
  * Draws every key in a single Canvas and owns one container-level pointer handler. A composable per
@@ -54,7 +60,10 @@ fun PianoKeyboard(
     modifier: Modifier = Modifier,
 ) {
     var size by remember { mutableStateOf(IntSize.Zero) }
-    val pressedByPointer = remember { mutableStateMapOf<PointerId, Set<Int>>() }
+    val currentOnNoteOn by rememberUpdatedState(onNoteOn)
+    val currentOnNoteOff by rememberUpdatedState(onNoteOff)
+    val heldNotes = remember { HeldNotes({ currentOnNoteOn(it) }, { currentOnNoteOff(it) }) }
+    val nodeCoordinates = remember { NodeCoordinates() }
     val keyColors = LocalKeyColors.current
     val textMeasurer = rememberTextMeasurer()
 
@@ -66,21 +75,19 @@ fun PianoKeyboard(
         }
     }
 
+    DisposableEffect(heldNotes, layout) {
+        onDispose { heldNotes.releaseAll() }
+    }
+
     Canvas(
         modifier = modifier
             .fillMaxSize()
             .onSizeChanged { size = it }
-            .keyboardPointerInput(
-                layout,
-                useAreaHitTest,
-                areaOverlapThreshold,
-                pressedByPointer,
-                onNoteOn,
-                onNoteOff,
-            ),
+            .onPlaced { nodeCoordinates.value = it }
+            .keyboardPointerInput(layout, useAreaHitTest, areaOverlapThreshold, heldNotes, nodeCoordinates),
     ) {
         val current = layout ?: return@Canvas
-        val pressed = pressedByPointer.values.flatten().toSet()
+        val pressed = heldNotes.byPointer.values.flatten().toSet()
         current.whiteKeys.forEach { key ->
             val fill = if (key.midiNote in pressed) keyColors.whiteKeyPressed else keyColors.whiteKey
             drawKey(key, fill, keyColors)
@@ -97,35 +104,108 @@ fun PianoKeyboard(
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
+private class NodeCoordinates {
+    var value: LayoutCoordinates? = null
+}
+
+/**
+ * A note shared by several pointers sounds once and is released only when its last holder lifts.
+ */
+private class HeldNotes(
+    private val onNoteOn: (Int) -> Unit,
+    private val onNoteOff: (Int) -> Unit,
+) {
+    val byPointer: SnapshotStateMap<PointerId, Set<Int>> = mutableStateMapOf()
+    private val holders = IntArray(MIDI_NOTE_COUNT)
+
+    // Includes pointers over no key, which byPointer drops.
+    private val down = MutableLongSet()
+
+    // Pointers down across a layout change stay silent until lifted, so jitter can't retrigger a shifted key.
+    // PointerIds are never reused, so entries of vanished pointers are harmless until everything lifts.
+    private val muted = MutableLongSet()
+
+    fun isMuted(id: PointerId): Boolean = id.value in muted
+
+    fun retarget(id: PointerId, notes: Set<Int>) {
+        val previous = byPointer[id].orEmpty()
+        if (notes == previous) return
+        previous.forEach { if (it !in notes) release(it) }
+        notes.forEach { if (it !in previous) acquire(it) }
+        if (notes.isEmpty()) {
+            byPointer.remove(id)
+        } else {
+            byPointer[id] = notes
+        }
+    }
+
+    // A pointer that leaves the window never reports an up event; without this its notes would stick.
+    fun sync(changes: List<PointerInputChange>) {
+        down.clear()
+        for (i in changes.indices) {
+            val change = changes[i]
+            if (change.pressed) down += change.id.value else lift(change.id)
+        }
+        if (down.isEmpty()) muted.clear()
+        if (byPointer.isEmpty()) return
+        val iterator = byPointer.iterator()
+        while (iterator.hasNext()) {
+            val (id, notes) = iterator.next()
+            if (id.value !in down) {
+                iterator.remove()
+                notes.forEach(::release)
+            }
+        }
+    }
+
+    fun releaseAll() {
+        muted += down
+        byPointer.values.forEach { notes -> notes.forEach(::release) }
+        byPointer.clear()
+    }
+
+    private fun lift(id: PointerId) {
+        muted -= id.value
+        byPointer.remove(id)?.forEach(::release)
+    }
+
+    private fun acquire(note: Int) {
+        if (holders[note]++ == 0) onNoteOn(note)
+    }
+
+    private fun release(note: Int) {
+        if (holders[note] == 0) return
+        if (--holders[note] == 0) onNoteOff(note)
+    }
+}
+
 private fun Modifier.keyboardPointerInput(
     layout: KeyboardLayout?,
     useAreaHitTest: Boolean,
     areaOverlapThreshold: Float,
-    pressedByPointer: SnapshotStateMap<PointerId, Set<Int>>,
-    onNoteOn: (Int) -> Unit,
-    onNoteOff: (Int) -> Unit,
-): Modifier = pointerInput(layout, useAreaHitTest, areaOverlapThreshold) {
+    heldNotes: HeldNotes,
+    nodeCoordinates: NodeCoordinates,
+): Modifier = pointerInput(layout, useAreaHitTest, areaOverlapThreshold, heldNotes) {
     val current = layout ?: return@pointerInput
     awaitPointerEventScope {
         while (true) {
             val event = awaitPointerEvent(PointerEventPass.Initial)
-            releaseVanishedPointers(event.changes.mapTo(mutableSetOf()) { it.id }, pressedByPointer, onNoteOff)
-            event.changes.forEachIndexed { index, change ->
-                if (change.changedToUpIgnoreConsumed()) {
-                    pressedByPointer.remove(change.id)?.forEach(onNoteOff)
-                } else if (change.changedToDownIgnoreConsumed() || change.positionChanged()) {
-                    retarget(
-                        current,
-                        useAreaHitTest,
-                        areaOverlapThreshold,
-                        event,
-                        index,
-                        change,
-                        pressedByPointer,
-                        onNoteOn,
-                        onNoteOff,
-                    )
+            val changes = event.changes
+            heldNotes.sync(changes)
+            // The node resizes a frame before recomposition swaps in the matching layout.
+            if (size.width.toFloat() != current.width || size.height.toFloat() != current.height) {
+                heldNotes.releaseAll()
+            }
+            for (i in changes.indices) {
+                val change = changes[i]
+                val moved = change.changedToDownIgnoreConsumed() || change.positionChanged()
+                if (change.pressed && moved && !heldNotes.isMuted(change.id)) {
+                    val notes = if (useAreaHitTest) {
+                        notesUnderTouch(current, areaOverlapThreshold, event, change, nodeCoordinates.value)
+                    } else {
+                        setOfNotNull(current.noteAt(change.position.x, change.position.y))
+                    }
+                    heldNotes.retarget(change.id, notes)
                 }
                 change.consume()
             }
@@ -133,55 +213,47 @@ private fun Modifier.keyboardPointerInput(
     }
 }
 
-// A pointer that leaves the window never reports an up event; without this its notes would stick.
-private fun releaseVanishedPointers(
-    live: Set<PointerId>,
-    pressedByPointer: SnapshotStateMap<PointerId, Set<Int>>,
-    onNoteOff: (Int) -> Unit,
-) {
-    pressedByPointer.keys.filterNot(live::contains).forEach { stale ->
-        pressedByPointer.remove(stale)?.forEach(onNoteOff)
-    }
-}
-
 @OptIn(ExperimentalComposeUiApi::class)
-private fun retarget(
+private fun notesUnderTouch(
     layout: KeyboardLayout,
-    useAreaHitTest: Boolean,
     areaOverlapThreshold: Float,
     event: PointerEvent,
-    changeIndex: Int,
     change: PointerInputChange,
-    pressedByPointer: SnapshotStateMap<PointerId, Set<Int>>,
-    onNoteOn: (Int) -> Unit,
-    onNoteOff: (Int) -> Unit,
-) {
-    val notes = if (useAreaHitTest) {
-        val (touchMajor, touchMinor) = touchSize(event, changeIndex)
-        layout.notesInArea(change.position.x, change.position.y, touchMajor, touchMinor, areaOverlapThreshold)
-    } else {
-        setOfNotNull(layout.noteAt(change.position.x, change.position.y))
-    }
-    val previous = pressedByPointer[change.id] ?: emptySet()
-    if (notes == previous) return
-    (previous - notes).forEach(onNoteOff)
-    (notes - previous).forEach(onNoteOn)
-    if (notes.isEmpty()) {
-        pressedByPointer.remove(change.id)
-    } else {
-        pressedByPointer[change.id] = notes
-    }
+    coordinates: LayoutCoordinates?,
+): Set<Int> {
+    val x = change.position.x
+    val y = change.position.y
+    val motionEvent = event.motionEvent
+    val index = motionPointerIndex(motionEvent, change, coordinates)
+    if (motionEvent == null || index < 0) return layout.notesInArea(x, y, 0f, 0f, areaOverlapThreshold)
+    val touchMajor = motionEvent.getTouchMajor(index)
+    val touchMinor = motionEvent.getTouchMinor(index)
+    return layout.notesInArea(x, y, touchMajor, touchMinor, areaOverlapThreshold)
 }
 
-// Compose's PointerId is synthetic, not the MotionEvent pointer id; only the changes-list index matches.
-@OptIn(ExperimentalComposeUiApi::class)
-private fun touchSize(event: PointerEvent, changeIndex: Int): Pair<Float, Float> {
-    val motionEvent = event.motionEvent ?: return 0f to 0f
-    return if (changeIndex >= motionEvent.pointerCount) {
-        0f to 0f
-    } else {
-        motionEvent.getTouchMajor(changeIndex) to motionEvent.getTouchMinor(changeIndex)
+/**
+ * Compose's PointerId is synthetic and [PointerEvent.changes] holds only pointers hitting this node,
+ * so the MotionEvent pointer is matched by nearest position in root coordinates.
+ */
+private fun motionPointerIndex(
+    motionEvent: MotionEvent?,
+    change: PointerInputChange,
+    coordinates: LayoutCoordinates?,
+): Int {
+    if (motionEvent == null || coordinates == null || !coordinates.isAttached) return -1
+    val target = coordinates.localToRoot(change.position)
+    var best = -1
+    var bestDistance = Float.MAX_VALUE
+    for (i in 0 until motionEvent.pointerCount) {
+        val dx = motionEvent.getX(i) - target.x
+        val dy = motionEvent.getY(i) - target.y
+        val distance = dx * dx + dy * dy
+        if (distance < bestDistance) {
+            bestDistance = distance
+            best = i
+        }
     }
+    return best
 }
 
 private fun DrawScope.drawLabel(

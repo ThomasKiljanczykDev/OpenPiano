@@ -1,6 +1,6 @@
 # Privacy policy — OpenPiano
 
-Effective date: 2026-09-21
+Effective date: 2026-09-23
 
 This policy covers the OpenPiano Android app,
 package `dev.thomas_kiljanczyk.openpiano`, in both its `foss` and `play`
@@ -50,14 +50,22 @@ below for Google's own handling of this data.
 ## Local data
 
 OpenPiano stores your in-app settings (visible key count, key label
-mode, octave/key shift, and similar keyboard preferences) locally on
-your device using Android's DataStore. This data never leaves your
-device and is deleted when you uninstall the app or clear its storage.
+mode, octave/key shift, app language, and similar preferences) locally
+on your device using Android's DataStore. The app itself never
+transmits them. They are deleted when you uninstall the app or clear
+its storage.
+
+If Android backup is enabled on your device, Android may include these
+settings in your device backup (for example, Google's backup service)
+and restore them when you set up a new device. That backup is performed
+by the operating system under your backup settings, not by OpenPiano,
+and you can turn it off in your device's system settings.
 
 ## Data retention
 
 - Local settings: retained on-device until you uninstall the app or
-  clear its data; never transmitted anywhere.
+  clear its data; never transmitted by the app. Copies in an Android
+  device backup follow your backup provider's retention.
 - Firebase Analytics data (`play` flavor only): retained per Google's
   default Firebase Analytics retention settings. See Google's own
   policy, linked below.

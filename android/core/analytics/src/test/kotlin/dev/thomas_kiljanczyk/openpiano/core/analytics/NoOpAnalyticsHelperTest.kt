@@ -1,6 +1,6 @@
 package dev.thomas_kiljanczyk.openpiano.core.analytics
 
-import kotlin.test.Test
+import org.junit.Test
 
 class NoOpAnalyticsHelperTest {
 

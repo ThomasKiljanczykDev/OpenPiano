@@ -1,7 +1,7 @@
 package dev.thomas_kiljanczyk.openpiano.core.testing
 
 import dev.thomas_kiljanczyk.openpiano.core.data.model.KeyboardSettings
-import dev.thomas_kiljanczyk.openpiano.core.data.repository.KeyboardSettingsRepository
+import dev.thomas_kiljanczyk.openpiano.core.data.repository.UserPreferencesRepository
 import dev.thomas_kiljanczyk.openpiano.core.model.KeyLabelMode
 import dev.thomas_kiljanczyk.openpiano.core.model.TouchHitTestMode
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -9,11 +9,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class FakeKeyboardSettingsRepository(initial: KeyboardSettings = KeyboardSettings.DEFAULT) :
-    KeyboardSettingsRepository {
+class FakeUserPreferencesRepository(initial: KeyboardSettings = KeyboardSettings.DEFAULT) :
+    UserPreferencesRepository {
     private val state = MutableStateFlow(initial)
+    private var languageTag: String? = null
 
-    override val settings: StateFlow<KeyboardSettings> = state.asStateFlow()
+    override val keyboardSettings: StateFlow<KeyboardSettings> = state.asStateFlow()
 
     fun emit(value: KeyboardSettings) {
         state.value = value
@@ -35,4 +36,10 @@ class FakeKeyboardSettingsRepository(initial: KeyboardSettings = KeyboardSetting
 
     override suspend fun setAreaOverlapThresholdPercent(percent: Int) =
         state.update { it.copy(areaOverlapThresholdPercent = percent) }
+
+    override suspend fun getLanguageTag(): String? = languageTag
+
+    override suspend fun setLanguageTag(tag: String?) {
+        languageTag = tag
+    }
 }

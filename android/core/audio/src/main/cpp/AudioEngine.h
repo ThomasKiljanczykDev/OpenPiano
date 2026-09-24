@@ -60,6 +60,8 @@ private:
     SynthEngine synth_;
     LockFreeQueue<MidiMessage, kQueueCapacity> queue_;
     std::atomic<bool> running_{false};
+    /// Set off the audio thread; consumed by the audio thread before the next render.
+    std::atomic<bool> soundsOffPending_{false};
 };
 
 } // namespace openpiano

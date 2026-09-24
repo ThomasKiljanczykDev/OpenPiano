@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.thomas_kiljanczyk.openpiano.core.data.repository.KeyboardSettingsRepository
+import dev.thomas_kiljanczyk.openpiano.core.data.repository.UserPreferencesRepository
 import dev.thomas_kiljanczyk.openpiano.core.data.touch.TouchAreaSupport
 import dev.thomas_kiljanczyk.openpiano.core.midi.MidiOutputPort
 import dev.thomas_kiljanczyk.openpiano.core.model.KeyLabelMode
@@ -26,19 +26,20 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     languageOptionsProvider: LanguageOptionsProvider,
     private val localeManager: LocaleManager,
-    private val settingsRepository: KeyboardSettingsRepository,
+    private val settingsRepository: UserPreferencesRepository,
     touchAreaSupport: TouchAreaSupport,
     midiOutputPort: MidiOutputPort,
 ) : ViewModel() {
 
-    val languageOptions: List<Pair<LanguageOption, String>> = languageOptionsProvider.options()
+    val languageOptions: List<LanguageOption> = languageOptionsProvider.options()
 
     var language: LanguageOption by mutableStateOf(localeManager.getSavedLanguage())
         private set
 
-    val uiState: StateFlow<SettingsUiState> =
+    /** Null until the first stored settings arrive, so the screen never renders placeholder defaults. */
+    val uiState: StateFlow<SettingsUiState?> =
         combine(
-            settingsRepository.settings,
+            settingsRepository.keyboardSettings,
             midiOutputPort.isConnected,
             flowOf(touchAreaSupport.isSupported),
             ::SettingsUiState,
@@ -46,12 +47,16 @@ class SettingsViewModel @Inject constructor(
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
-                initialValue = SettingsUiState(),
+                initialValue = null,
             )
 
     fun selectLanguage(option: LanguageOption) {
-        language = option
         localeManager.updateLanguage(option)
+        refreshLanguage()
+    }
+
+    fun refreshLanguage() {
+        language = localeManager.getSavedLanguage()
     }
 
     fun setLabelMode(mode: KeyLabelMode) {

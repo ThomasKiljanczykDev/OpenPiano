@@ -29,7 +29,8 @@ public:
     void setOutput(int32_t sampleRate);
     void apply(const MidiMessage& message);
     void render(float* interleavedStereo, int32_t numFrames);
-    void allNotesOff();
+    /// Cuts every voice with no release tail.
+    void allSoundsOff();
 
     /// Safe to call from any thread. Toggling off stops feeding new signal into the reverb but
     /// leaves its delay lines alone, so an in-flight tail decays naturally.

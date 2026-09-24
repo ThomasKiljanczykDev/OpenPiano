@@ -1,35 +1,46 @@
 package dev.thomas_kiljanczyk.openpiano.core.data.repository
 
-import androidx.datastore.core.CorruptionException
+import android.util.Log
 import androidx.datastore.core.DataStore
 import dev.thomas_kiljanczyk.openpiano.core.data.model.KeyboardSettings
+import dev.thomas_kiljanczyk.openpiano.core.datastore.proto.UserPreferences
 import dev.thomas_kiljanczyk.openpiano.core.model.KeyLabelMode
 import dev.thomas_kiljanczyk.openpiano.core.model.TouchHitTestMode
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.retryWhen
+import java.io.IOException
 import javax.inject.Inject
 import dev.thomas_kiljanczyk.openpiano.core.datastore.proto.KeyLabelMode as KeyLabelModeProto
-import dev.thomas_kiljanczyk.openpiano.core.datastore.proto.KeyboardSettings as KeyboardSettingsProto
 import dev.thomas_kiljanczyk.openpiano.core.datastore.proto.ReverbState as ReverbStateProto
 import dev.thomas_kiljanczyk.openpiano.core.datastore.proto.TouchHitTestMode as TouchHitTestModeProto
 
-class KeyboardSettingsRepositoryImpl @Inject constructor(private val dataStore: DataStore<KeyboardSettingsProto>) :
-    KeyboardSettingsRepository {
+class UserPreferencesRepositoryImpl @Inject constructor(private val dataStore: DataStore<UserPreferences>) :
+    UserPreferencesRepository {
 
-    override val settings: Flow<KeyboardSettings> = dataStore.data
-        .catch { throwable ->
-            if (throwable is CorruptionException) {
-                emit(KeyboardSettingsProto.getDefaultInstance())
-            } else {
-                throw throwable
+    override val keyboardSettings: Flow<KeyboardSettings> = flow {
+        var emittedAny = false
+        dataStore.data
+            .retryWhen { cause, attempt ->
+                if (cause !is IOException) return@retryWhen false
+                Log.w(TAG, "Reading keyboard settings failed", cause)
+                if (!emittedAny) emit(UserPreferences.getDefaultInstance())
+                delay(retryDelayMillis(attempt))
+                true
             }
-        }
-        .map(KeyboardSettingsProto::toDomain)
+            .collect {
+                emittedAny = true
+                emit(it)
+            }
+    }.map(UserPreferences::toDomain).distinctUntilChanged()
 
     override suspend fun setVisibleWhiteKeys(count: Int) {
         val clamped = count.coerceIn(KeyboardSettings.VISIBLE_WHITE_KEYS_RANGE)
-        dataStore.updateData { stored ->
+        update { stored ->
             stored.toBuilder()
                 .setVisibleWhiteKeys(clamped)
                 .setLowestNote(KeyboardSettings.clampLowestNote(stored.toDomain().lowestNote, clamped))
@@ -38,7 +49,7 @@ class KeyboardSettingsRepositoryImpl @Inject constructor(private val dataStore: 
     }
 
     override suspend fun setLowestNote(midi: Int) {
-        dataStore.updateData { stored ->
+        update { stored ->
             val visible = stored.toDomain().visibleWhiteKeys
             stored.toBuilder()
                 .setLowestNote(KeyboardSettings.clampLowestNote(midi, visible))
@@ -47,30 +58,60 @@ class KeyboardSettingsRepositoryImpl @Inject constructor(private val dataStore: 
     }
 
     override suspend fun setLabelMode(mode: KeyLabelMode) {
-        dataStore.updateData { it.toBuilder().setLabelMode(mode.toProto()).build() }
+        update { it.toBuilder().setLabelMode(mode.toProto()).build() }
     }
 
     override suspend fun setReverbEnabled(enabled: Boolean) {
-        dataStore.updateData { it.toBuilder().setReverbState(enabled.toReverbStateProto()).build() }
+        update { it.toBuilder().setReverbState(enabled.toReverbStateProto()).build() }
     }
 
     override suspend fun setMidiOutputEnabled(enabled: Boolean) {
-        dataStore.updateData { it.toBuilder().setMidiOutputEnabled(enabled).build() }
+        update { it.toBuilder().setMidiOutputEnabled(enabled).build() }
     }
 
     override suspend fun setTouchHitTestMode(mode: TouchHitTestMode) {
-        dataStore.updateData { it.toBuilder().setTouchHitTestMode(mode.toProto()).build() }
+        update { it.toBuilder().setTouchHitTestMode(mode.toProto()).build() }
     }
 
     override suspend fun setAreaOverlapThresholdPercent(percent: Int) {
         val clamped = percent.coerceIn(KeyboardSettings.AREA_OVERLAP_THRESHOLD_PERCENT_RANGE)
-        dataStore.updateData { it.toBuilder().setAreaOverlapThresholdPercent(clamped).build() }
+        update { it.toBuilder().setAreaOverlapThresholdPercent(clamped).build() }
+    }
+
+    override suspend fun getLanguageTag(): String? =
+        try {
+            dataStore.data.first().languageTag.ifEmpty { null }
+        } catch (e: IOException) {
+            Log.w(TAG, "Reading language failed", e)
+            null
+        }
+
+    override suspend fun setLanguageTag(tag: String?) {
+        update { it.toBuilder().setLanguageTag(tag.orEmpty()).build() }
+    }
+
+    private suspend fun update(transform: (UserPreferences) -> UserPreferences) {
+        try {
+            dataStore.updateData { transform(it) }
+        } catch (e: IOException) {
+            Log.w(TAG, "Writing user preferences failed", e)
+        }
     }
 }
 
-private fun KeyboardSettingsProto.toDomain(): KeyboardSettings {
+private const val TAG = "UserPreferencesRepo"
+private const val INITIAL_RETRY_DELAY_MILLIS = 500L
+private const val MAX_RETRY_DELAY_MILLIS = 30_000L
+private const val MAX_BACKOFF_SHIFT = 6
+
+private fun retryDelayMillis(attempt: Long): Long =
+    (INITIAL_RETRY_DELAY_MILLIS shl attempt.coerceAtMost(MAX_BACKOFF_SHIFT.toLong()).toInt())
+        .coerceAtMost(MAX_RETRY_DELAY_MILLIS)
+
+private fun UserPreferences.toDomain(): KeyboardSettings {
     val defaults = KeyboardSettings.DEFAULT
-    val visible = visibleWhiteKeys.takeIf { it != 0 } ?: defaults.visibleWhiteKeys
+    val visible = visibleWhiteKeys.takeIf { it != 0 }?.coerceIn(KeyboardSettings.VISIBLE_WHITE_KEYS_RANGE)
+        ?: defaults.visibleWhiteKeys
     val lowest = lowestNote.takeIf { it != 0 } ?: defaults.lowestNote
     return KeyboardSettings(
         visibleWhiteKeys = visible,
@@ -80,6 +121,7 @@ private fun KeyboardSettingsProto.toDomain(): KeyboardSettings {
         midiOutputEnabled = midiOutputEnabled,
         touchHitTestMode = touchHitTestMode.toDomain() ?: defaults.touchHitTestMode,
         areaOverlapThresholdPercent = areaOverlapThresholdPercent.takeIf { it != 0 }
+            ?.coerceIn(KeyboardSettings.AREA_OVERLAP_THRESHOLD_PERCENT_RANGE)
             ?: defaults.areaOverlapThresholdPercent,
     )
 }

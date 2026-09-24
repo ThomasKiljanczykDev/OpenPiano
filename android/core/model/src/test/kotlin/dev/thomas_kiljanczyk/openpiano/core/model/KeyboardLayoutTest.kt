@@ -99,10 +99,24 @@ class KeyboardLayoutTest {
     }
 
     @Test
-    fun `area hit test below the overlap threshold returns nothing`() {
+    fun `area hit test below the overlap threshold with the centre off the keyboard returns nothing`() {
         val l = layout()
         val notes = l.notesInArea(x = -31f, y = 100f, touchMajor = 100f, touchMinor = 100f)
         assertEquals(emptySet(), notes)
+    }
+
+    @Test
+    fun `area hit test below the overlap threshold falls back to the key under the centre`() {
+        val l = layout()
+        val notes = l.notesInArea(x = 150f, y = 150f, touchMajor = 400f, touchMinor = 400f)
+        assertEquals(setOf(62), notes)
+    }
+
+    @Test
+    fun `area hit test fallback prefers the black key under the centre`() {
+        val l = layout()
+        val notes = l.notesInArea(x = 100f, y = 10f, touchMajor = 400f, touchMinor = 400f)
+        assertEquals(setOf(61), notes)
     }
 
     @Test
