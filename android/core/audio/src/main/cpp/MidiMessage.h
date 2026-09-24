@@ -17,5 +17,9 @@ struct MidiMessage {
 
 constexpr int kNoteOff = 0x80;
 constexpr int kNoteOn = 0x90;
+constexpr int kControlChange = 0xB0;
+
+constexpr int kCcAllSoundOff = 120;
+constexpr int kCcAllNotesOff = 123;
 
 } // namespace openpiano

@@ -36,6 +36,9 @@ constexpr int kProbeVelocity = 100;
 bool loadProbeSynth(JNIEnv* env, jbyteArray soundFont, openpiano::SynthEngine& synth) {
     const jsize size = env->GetArrayLength(soundFont);
     jbyte* bytes = env->GetByteArrayElements(soundFont, nullptr);
+    if (bytes == nullptr) {
+        return false;
+    }
     const bool loaded = synth.load(bytes, static_cast<size_t>(size));
     env->ReleaseByteArrayElements(soundFont, bytes, JNI_ABORT);
     if (loaded) {
@@ -94,6 +97,23 @@ float releasePeakAmplitude(JNIEnv* env, jbyteArray soundFont, jintArray notes,
     return renderPeakAmplitude(synth, releaseBursts);
 }
 
+/// Holds notes down for sustainBursts, sends one control change on channel 0, renders
+/// settleBursts, then reports the loudest dry sample over the following measureBursts.
+float controlChangePeakAmplitude(JNIEnv* env, jbyteArray soundFont, jintArray notes, int controller,
+                                 int32_t sustainBursts, int32_t settleBursts,
+                                 int32_t measureBursts) {
+    openpiano::SynthEngine synth;
+    if (!loadProbeSynth(env, soundFont, synth)) {
+        return -1.0f;
+    }
+    synth.setReverbEnabled(false);
+    sendNoteMessages(env, synth, notes, openpiano::kNoteOn);
+    renderPeakAmplitude(synth, sustainBursts);
+    synth.apply(openpiano::MidiMessage{(openpiano::kControlChange << 16) | (controller << 8)});
+    renderPeakAmplitude(synth, settleBursts);
+    return renderPeakAmplitude(synth, measureBursts);
+}
+
 } // namespace
 
 extern "C" {
@@ -103,17 +123,14 @@ Java_dev_thomas_1kiljanczyk_openpiano_core_audio_OboeAudioEngine_nativeCreate(JN
     return reinterpret_cast<jlong>(new openpiano::AudioEngine());
 }
 
-JNIEXPORT void JNICALL
-Java_dev_thomas_1kiljanczyk_openpiano_core_audio_OboeAudioEngine_nativeDestroy(JNIEnv*, jobject,
-                                                                             jlong handle) {
-    delete engineOf(handle);
-}
-
 JNIEXPORT jboolean JNICALL
 Java_dev_thomas_1kiljanczyk_openpiano_core_audio_OboeAudioEngine_nativeLoadSoundFont(
     JNIEnv* env, jobject, jlong handle, jbyteArray data) {
     const jsize size = env->GetArrayLength(data);
     jbyte* bytes = env->GetByteArrayElements(data, nullptr);
+    if (bytes == nullptr) {
+        return JNI_FALSE;
+    }
     const bool loaded = engineOf(handle)->loadSoundFont(bytes, static_cast<size_t>(size));
     env->ReleaseByteArrayElements(data, bytes, JNI_ABORT);
     return static_cast<jboolean>(loaded);
@@ -121,20 +138,17 @@ Java_dev_thomas_1kiljanczyk_openpiano_core_audio_OboeAudioEngine_nativeLoadSound
 
 JNIEXPORT jboolean JNICALL
 Java_dev_thomas_1kiljanczyk_openpiano_core_audio_OboeAudioEngine_nativeStart(JNIEnv*, jobject,
-                                                                           jlong handle) {
+                                                                             jlong handle) {
     return static_cast<jboolean>(engineOf(handle)->start());
 }
 
-JNIEXPORT void JNICALL
-Java_dev_thomas_1kiljanczyk_openpiano_core_audio_OboeAudioEngine_nativeStop(JNIEnv*, jobject,
-                                                                          jlong handle) {
+JNIEXPORT void JNICALL Java_dev_thomas_1kiljanczyk_openpiano_core_audio_OboeAudioEngine_nativeStop(
+    JNIEnv*, jobject, jlong handle) {
     engineOf(handle)->stop();
 }
 
-JNIEXPORT void JNICALL
-Java_dev_thomas_1kiljanczyk_openpiano_core_audio_OboeAudioEngine_nativeSend(JNIEnv*, jobject,
-                                                                          jlong handle,
-                                                                          jint packed) {
+JNIEXPORT void JNICALL Java_dev_thomas_1kiljanczyk_openpiano_core_audio_OboeAudioEngine_nativeSend(
+    JNIEnv*, jobject, jlong handle, jint packed) {
     engineOf(handle)->send(packed);
 }
 
@@ -146,7 +160,7 @@ Java_dev_thomas_1kiljanczyk_openpiano_core_audio_OboeAudioEngine_nativeSetReverb
 
 JNIEXPORT jintArray JNICALL
 Java_dev_thomas_1kiljanczyk_openpiano_core_audio_OboeAudioEngine_nativeStats(JNIEnv* env, jobject,
-                                                                           jlong handle) {
+                                                                             jlong handle) {
     openpiano::AudioEngine* engine = engineOf(handle);
     jint values[]{engine->sampleRate(), engine->framesPerBurst(),
                   static_cast<jint>(engine->isExclusive()), engine->xRunCount(),
@@ -158,7 +172,7 @@ Java_dev_thomas_1kiljanczyk_openpiano_core_audio_OboeAudioEngine_nativeStats(JNI
 
 JNIEXPORT jstring JNICALL
 Java_dev_thomas_1kiljanczyk_openpiano_core_audio_NativeQueueSelfTest_nativeFifoOrder(JNIEnv* env,
-                                                                                   jobject) {
+                                                                                     jobject) {
     openpiano::LockFreeQueue<int32_t, kSelfTestCapacity> queue;
     for (int32_t i = 0; i < static_cast<int32_t>(kSelfTestCapacity); ++i) {
         if (!queue.push(i)) {
@@ -183,7 +197,7 @@ Java_dev_thomas_1kiljanczyk_openpiano_core_audio_NativeQueueSelfTest_nativeFifoO
 
 JNIEXPORT jstring JNICALL
 Java_dev_thomas_1kiljanczyk_openpiano_core_audio_NativeQueueSelfTest_nativeDropWhenFull(JNIEnv* env,
-                                                                                      jobject) {
+                                                                                        jobject) {
     openpiano::LockFreeQueue<int32_t, kSelfTestCapacity> queue;
     for (int32_t i = 0; i < static_cast<int32_t>(kSelfTestCapacity); ++i) {
         if (!queue.push(i)) {
@@ -269,6 +283,14 @@ Java_dev_thomas_1kiljanczyk_openpiano_core_audio_NativeSynthProbe_nativeReleaseP
     jint releaseBursts, jboolean reverbEnabled) {
     return releasePeakAmplitude(env, soundFont, notes, sustainBursts, releaseBursts,
                                 reverbEnabled == JNI_TRUE);
+}
+
+JNIEXPORT jfloat JNICALL
+Java_dev_thomas_1kiljanczyk_openpiano_core_audio_NativeSynthProbe_nativeControlChangePeakAmplitude(
+    JNIEnv* env, jobject, jbyteArray soundFont, jintArray notes, jint controller,
+    jint sustainBursts, jint settleBursts, jint measureBursts) {
+    return controlChangePeakAmplitude(env, soundFont, notes, controller, sustainBursts,
+                                      settleBursts, measureBursts);
 }
 
 } // extern "C"

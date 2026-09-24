@@ -14,9 +14,10 @@ interface AudioEngine {
 
     fun noteOff(note: Int)
 
-    fun setReverbEnabled(enabled: Boolean)
+    /** Enqueued behind any pending note events, like [noteOn]. */
+    fun allNotesOff()
 
-    fun release()
+    fun setReverbEnabled(enabled: Boolean)
 }
 
 const val DEFAULT_VELOCITY = 100

@@ -1,0 +1,9 @@
+Fehlerbehebungen und Stabilitätsverbesserungen.
+
+• Keine hängenden Töne mehr beim Öffnen der Einstellungen oder Verschieben der Tastatur
+• Genaueres Multitouch, auch mit zwei Fingern auf einer Taste
+• Sprachwechsel werden jetzt zuverlässig übernommen
+• Einstellungsdialoge lassen sich auf kleinen Bildschirmen scrollen
+• Die Statusleiste folgt dem Dunkelmodus
+• Zuverlässigere USB-MIDI-Ausgabe
+• Seltene Abstürze beim Start und beim Öffnen von Links behoben

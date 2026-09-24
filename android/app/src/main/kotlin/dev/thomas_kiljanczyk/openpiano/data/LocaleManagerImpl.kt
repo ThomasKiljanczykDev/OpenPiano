@@ -1,62 +1,71 @@
 package dev.thomas_kiljanczyk.openpiano.data
 
+import android.app.LocaleManager
 import android.content.Context
 import android.os.Build
+import android.os.LocaleList
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.edit
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dev.thomas_kiljanczyk.openpiano.core.common.di.ApplicationScope
+import dev.thomas_kiljanczyk.openpiano.core.data.repository.UserPreferencesRepository
 import dev.thomas_kiljanczyk.openpiano.feature.settings.impl.domain.LanguageOption
 import dev.thomas_kiljanczyk.openpiano.feature.settings.impl.domain.SupportedLanguages
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Singleton
 import dev.thomas_kiljanczyk.openpiano.feature.settings.impl.domain.LocaleManager as LocaleManagerInterface
 
+/**
+ * Below API 33 an explicit user choice is persisted in [UserPreferencesRepository]; otherwise the device
+ * language is re-resolved on every start. On 33+ the framework owns the choice.
+ */
 @Singleton
-class LocaleManagerImpl @Inject constructor(@param:ApplicationContext private val context: Context) :
-    LocaleManagerInterface {
+class LocaleManagerImpl @Inject constructor(
+    @param:ApplicationContext private val context: Context,
+    private val userPreferencesRepository: UserPreferencesRepository,
+    @param:ApplicationScope private val scope: CoroutineScope,
+) : LocaleManagerInterface {
+
+    @Volatile
+    private var chosenTag: String? = null
 
     override fun getSavedLanguage(): LanguageOption =
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-            // Must resolve before the first Activity picks its resources; can't move off main thread.
-            val prefs = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
-            val tag = prefs.getString(LANGUAGE_KEY, null)
-            LanguageOption.fromLocaleTag(tag, SupportedLanguages.localeTags(context.resources))
+            val supported = SupportedLanguages.localeTags(context.resources)
+            chosenTag?.takeIf { it in supported }?.let(::LanguageOption)
+                ?: SupportedLanguages.resolveForDevice(context)
         } else {
-            val applied = AppCompatDelegate.getApplicationLocales()
+            val applied = frameworkLocaleManager().applicationLocales
             if (applied.isEmpty) {
                 LanguageOption.SYSTEM
             } else {
-                val tag = SupportedLanguages.matchTag(
-                    applied.toLanguageTags().substringBefore(','),
-                    context.resources,
-                )
-                LanguageOption(tag)
+                LanguageOption(SupportedLanguages.matchTag(applied[0].toLanguageTag(), context.resources))
             }
         }
 
     override fun updateLanguage(language: LanguageOption) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-            val prefs = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
-            prefs.edit { putString(LANGUAGE_KEY, language.localeTag) }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // AppCompatDelegate no-ops on 33+ while no AppCompat activity delegate is alive.
+            frameworkLocaleManager().applicationLocales =
+                language.localeTag?.let(LocaleList::forLanguageTags) ?: LocaleList.getEmptyLocaleList()
+        } else {
+            chosenTag = language.localeTag
+            scope.launch { userPreferencesRepository.setLanguageTag(language.localeTag) }
+            AppCompatDelegate.setApplicationLocales(language.toLocaleListCompat())
         }
-        AppCompatDelegate.setApplicationLocales(language.toLocaleListCompat())
     }
 
     /** Called from [dev.thomas_kiljanczyk.openpiano.OpenPianoApplication.onCreate]. */
     fun applyLocaleOnStartup() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            return
-        }
-        var saved = getSavedLanguage()
-        if (saved.localeTag == null) {
-            saved = SupportedLanguages.resolveForDevice(context)
-            updateLanguage(saved)
-        }
-        AppCompatDelegate.setApplicationLocales(saved.toLocaleListCompat())
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) return
+        // Must resolve before the first Activity picks its resources.
+        chosenTag = runBlocking { userPreferencesRepository.getLanguageTag() }
+        AppCompatDelegate.setApplicationLocales(getSavedLanguage().toLocaleListCompat())
     }
 
-    private companion object {
-        const val PREFERENCES_NAME = "locale_prefs"
-        const val LANGUAGE_KEY = "app_language"
-    }
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun frameworkLocaleManager(): LocaleManager = context.getSystemService(LocaleManager::class.java)
 }

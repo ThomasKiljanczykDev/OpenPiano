@@ -35,9 +35,9 @@ private object NoOpAudioEngine : AudioEngine {
 
     override fun noteOff(note: Int) = Unit
 
-    override fun setReverbEnabled(enabled: Boolean) = Unit
+    override fun allNotesOff() = Unit
 
-    override fun release() = Unit
+    override fun setReverbEnabled(enabled: Boolean) = Unit
 }
 
 private object NoOpMidiOutputPort : MidiOutputPort {
@@ -46,6 +46,8 @@ private object NoOpMidiOutputPort : MidiOutputPort {
     override fun noteOn(note: Int, velocity: Int) = Unit
 
     override fun noteOff(note: Int) = Unit
+
+    override fun allNotesOff() = Unit
 }
 
 private fun state(

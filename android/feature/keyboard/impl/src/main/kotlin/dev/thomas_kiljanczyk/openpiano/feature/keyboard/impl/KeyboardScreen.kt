@@ -9,11 +9,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -23,7 +25,9 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -72,21 +76,39 @@ fun KeyboardScreen(
     onOpenSettings: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier.fillMaxSize()
-            .windowInsetsPadding(WindowInsets.safeDrawing.exclude(WindowInsets.displayCutout)),
-    ) {
-        KeyboardControls(uiState = uiState, onOpenSettings = onOpenSettings)
-        OverviewRow(
-            uiState = uiState,
-            onShiftKeys = onShiftKeys,
-            onLowestNoteChange = onLowestNoteChange,
-        )
-        if (!uiState.soundReady) {
-            LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+    val midiOutputEnabled by rememberUpdatedState(uiState.settings.midiOutputEnabled)
+    DisposableEffect(engine, midiOutputPort) {
+        onDispose {
+            engine.allNotesOff()
+            if (midiOutputEnabled) midiOutputPort.allNotesOff()
         }
-        Box(modifier = Modifier.weight(1f).testTag(PIANO_KEYBOARD_TEST_TAG)) {
-            val midiOutputEnabled = uiState.settings.midiOutputEnabled
+    }
+    Column(modifier = modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier.windowInsetsPadding(
+                WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
+            ),
+        ) {
+            KeyboardControls(uiState = uiState, onOpenSettings = onOpenSettings)
+            OverviewRow(
+                uiState = uiState,
+                onShiftKeys = onShiftKeys,
+                onLowestNoteChange = onLowestNoteChange,
+            )
+            if (!uiState.soundReady) {
+                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            }
+        }
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .windowInsetsPadding(
+                    WindowInsets.safeDrawing
+                        .exclude(WindowInsets.displayCutout)
+                        .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom),
+                )
+                .testTag(PIANO_KEYBOARD_TEST_TAG),
+        ) {
             PianoKeyboard(
                 lowestNote = uiState.lowestNote,
                 whiteKeyCount = uiState.settings.visibleWhiteKeys,

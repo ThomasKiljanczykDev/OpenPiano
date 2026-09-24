@@ -1,0 +1,9 @@
+Bug fixes and stability improvements.
+
+• Notes no longer get stuck when opening Settings or shifting the keyboard
+• More accurate multi-touch, including for two fingers on one key
+• Language changes now apply reliably
+• Settings dialogs scroll on small screens
+• Status bar follows dark mode changes
+• More reliable USB MIDI output
+• Fixed rare crashes on startup and when opening links

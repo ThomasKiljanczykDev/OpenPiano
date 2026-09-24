@@ -22,6 +22,19 @@ object NativeSynthProbe {
         reverbEnabled: Boolean,
     ): Float
 
+    /**
+     * Holds every given note down for [sustainBursts], sends control change [controller] on
+     * channel 0, renders [settleBursts], then returns the loudest dry sample over [measureBursts].
+     */
+    external fun nativeControlChangePeakAmplitude(
+        soundFont: ByteArray,
+        notes: IntArray,
+        controller: Int,
+        sustainBursts: Int,
+        settleBursts: Int,
+        measureBursts: Int,
+    ): Float
+
     init {
         System.loadLibrary("openpiano_audio")
     }

@@ -5,10 +5,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 interface LanguageOptionsProvider {
-    fun options(): List<Pair<LanguageOption, String>>
+    fun options(): List<LanguageOption>
 }
 
 class ResourceLanguageOptionsProvider @Inject constructor(@param:ApplicationContext private val context: Context) :
     LanguageOptionsProvider {
-    override fun options(): List<Pair<LanguageOption, String>> = SupportedLanguages.options(context)
+    override fun options(): List<LanguageOption> = SupportedLanguages.options(context.resources)
 }

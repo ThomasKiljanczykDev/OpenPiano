@@ -74,15 +74,7 @@ jobs:
       # supply resolves a track release even for an images-only edit; the version code must exist on that track.
       - name: Resolve version code
         id: version
-        run: |
-          set -euo pipefail
-          f=android/build-logic/convention/src/main/kotlin/dev/thomas_kiljanczyk/openpiano/buildlogic/AppVersion.kt
-          read_component() {
-            grep -oE "const val $1 = [0-9]+" "$f" | grep -oE '[0-9]+$'
-          }
-          version_code=$(( $(read_component MAJOR) * 10000 + $(read_component MINOR) * 100 + $(read_component PATCH) ))
-          echo "version_code=${version_code}" >> "$GITHUB_OUTPUT"
-          echo "Targeting versionCode ${version_code} on track ${{ inputs.track }}"
+        uses: ./.github/actions/app-version
 
       - name: Check Google Cloud configuration
         run: |

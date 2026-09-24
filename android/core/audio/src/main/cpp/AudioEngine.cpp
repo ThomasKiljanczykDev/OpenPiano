@@ -10,12 +10,15 @@ constexpr const char* kTag = "OpenPianoAudio";
 
 } // namespace
 
-AudioEngine::~AudioEngine() { stop(); }
+AudioEngine::~AudioEngine() {
+    stop();
+}
 
 bool AudioEngine::loadSoundFont(const void* data, size_t size) {
     std::lock_guard<std::mutex> lock(streamLock_);
     if (stream_ != nullptr) {
-        __android_log_print(ANDROID_LOG_ERROR, kTag, "loadSoundFont called while the stream is open");
+        __android_log_print(ANDROID_LOG_ERROR, kTag,
+                            "loadSoundFont called while the stream is open");
         return false;
     }
     return synth_.load(data, size);
@@ -86,10 +89,12 @@ void AudioEngine::stop() {
     MidiMessage discarded;
     while (queue_.pop(discarded)) {
     }
-    synth_.allNotesOff();
+    soundsOffPending_.store(true, std::memory_order_release);
 }
 
-void AudioEngine::send(int32_t packed) { queue_.push(MidiMessage{packed}); }
+void AudioEngine::send(int32_t packed) {
+    queue_.push(MidiMessage{packed});
+}
 
 int32_t AudioEngine::sampleRate() const {
     std::lock_guard<std::mutex> lock(streamLock_);
@@ -117,6 +122,9 @@ int32_t AudioEngine::xRunCount() const {
 
 oboe::DataCallbackResult AudioEngine::onAudioReady(oboe::AudioStream*, void* audioData,
                                                    int32_t numFrames) {
+    if (soundsOffPending_.exchange(false, std::memory_order_acq_rel)) {
+        synth_.allSoundsOff();
+    }
     MidiMessage message;
     while (queue_.pop(message)) {
         synth_.apply(message);
@@ -126,14 +134,18 @@ oboe::DataCallbackResult AudioEngine::onAudioReady(oboe::AudioStream*, void* aud
     return oboe::DataCallbackResult::Continue;
 }
 
-void AudioEngine::onErrorAfterClose(oboe::AudioStream*, oboe::Result error) {
+void AudioEngine::onErrorAfterClose(oboe::AudioStream* stream, oboe::Result error) {
     __android_log_print(ANDROID_LOG_WARN, kTag, "stream error after close: %s",
                         oboe::convertToText(error));
-    if (!running_.load(std::memory_order_acquire)) {
+    std::lock_guard<std::mutex> lock(streamLock_);
+    // Ignore errors for a stream that stop() already closed or replaced.
+    if (!running_.load(std::memory_order_acquire) || stream != stream_.get()) {
         return;
     }
-    std::lock_guard<std::mutex> lock(streamLock_);
+    latencyTuner_.reset();
     stream_.reset();
+    // Voices and release tails held across the reopen are pitched for the old sample rate.
+    soundsOffPending_.store(true, std::memory_order_release);
     if (!openStream()) {
         running_.store(false, std::memory_order_release);
     }

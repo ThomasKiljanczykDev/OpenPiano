@@ -13,14 +13,14 @@ import dagger.hilt.components.SingletonComponent
 import dev.thomas_kiljanczyk.openpiano.core.common.di.ApplicationScope
 import dev.thomas_kiljanczyk.openpiano.core.common.di.Dispatcher
 import dev.thomas_kiljanczyk.openpiano.core.common.di.OpenPianoDispatcher
-import dev.thomas_kiljanczyk.openpiano.core.datastore.proto.KeyboardSettings
-import dev.thomas_kiljanczyk.openpiano.core.datastore.proto.KeyboardSettingsSerializer
+import dev.thomas_kiljanczyk.openpiano.core.datastore.proto.UserPreferences
+import dev.thomas_kiljanczyk.openpiano.core.datastore.proto.UserPreferencesSerializer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.plus
 import javax.inject.Singleton
 
-private const val KEYBOARD_SETTINGS_FILE = "keyboard_settings.pb"
+private const val USER_PREFERENCES_FILE = "user_preferences.pb"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -28,16 +28,16 @@ object DataStoreModule {
 
     @Provides
     @Singleton
-    fun providesKeyboardSettingsDataStore(
+    fun providesUserPreferencesDataStore(
         @ApplicationContext context: Context,
         @Dispatcher(OpenPianoDispatcher.IO) dispatcher: CoroutineDispatcher,
         @ApplicationScope scope: CoroutineScope,
-    ): DataStore<KeyboardSettings> = DataStoreFactory.create(
-        serializer = KeyboardSettingsSerializer,
+    ): DataStore<UserPreferences> = DataStoreFactory.create(
+        serializer = UserPreferencesSerializer,
         corruptionHandler = ReplaceFileCorruptionHandler {
-            KeyboardSettings.getDefaultInstance()
+            UserPreferences.getDefaultInstance()
         },
         scope = scope + dispatcher,
-        produceFile = { context.dataStoreFile(KEYBOARD_SETTINGS_FILE) },
+        produceFile = { context.dataStoreFile(USER_PREFERENCES_FILE) },
     )
 }

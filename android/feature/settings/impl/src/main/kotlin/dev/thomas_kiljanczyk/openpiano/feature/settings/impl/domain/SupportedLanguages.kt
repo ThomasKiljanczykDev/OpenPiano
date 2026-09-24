@@ -29,12 +29,12 @@ object SupportedLanguages {
         return tags
     }
 
-    /** Picker entries, each labelled with its autonym; "System default" only exists on API 33+. */
-    fun options(context: Context): List<Pair<LanguageOption, String>> = buildList {
+    /** Picker entries; "System default" only on API 33+. Unlabelled so labels follow the current locale. */
+    fun options(resources: Resources): List<LanguageOption> = buildList {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            add(LanguageOption.SYSTEM to context.getString(R.string.settings_language_system_default))
+            add(LanguageOption.SYSTEM)
         }
-        localeTags(context.resources).forEach { tag -> add(LanguageOption(tag) to autonym(tag)) }
+        localeTags(resources).forEach { tag -> add(LanguageOption(tag)) }
     }
 
     /** The language's own name, capitalised in *its* locale (`Locale.ROOT` breaks Turkish "i"). */

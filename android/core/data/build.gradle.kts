@@ -5,6 +5,8 @@ plugins {
 
 android {
     namespace = "dev.thomas_kiljanczyk.openpiano.core.data"
+    // android.util.Log is called on the IOException paths exercised by unit tests.
+    testOptions.unitTests.isReturnDefaultValues = true
 }
 
 dependencies {

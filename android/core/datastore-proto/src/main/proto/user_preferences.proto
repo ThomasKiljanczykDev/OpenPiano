@@ -5,7 +5,7 @@ package dev.thomas_kiljanczyk.openpiano.core.datastore.proto;
 option java_package = "dev.thomas_kiljanczyk.openpiano.core.datastore.proto";
 option java_multiple_files = true;
 
-message KeyboardSettings {
+message UserPreferences {
   reserved 2;
   reserved "lowest_octave";
 
@@ -16,6 +16,7 @@ message KeyboardSettings {
   bool midi_output_enabled = 6;
   TouchHitTestMode touch_hit_test_mode = 7;
   int32 area_overlap_threshold_percent = 8;
+  string language_tag = 9;
 }
 
 enum KeyLabelMode {

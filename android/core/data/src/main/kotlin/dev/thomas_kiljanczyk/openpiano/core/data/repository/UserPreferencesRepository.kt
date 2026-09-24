@@ -5,9 +5,9 @@ import dev.thomas_kiljanczyk.openpiano.core.model.KeyLabelMode
 import dev.thomas_kiljanczyk.openpiano.core.model.TouchHitTestMode
 import kotlinx.coroutines.flow.Flow
 
-interface KeyboardSettingsRepository {
+interface UserPreferencesRepository {
 
-    val settings: Flow<KeyboardSettings>
+    val keyboardSettings: Flow<KeyboardSettings>
 
     suspend fun setVisibleWhiteKeys(count: Int)
 
@@ -22,4 +22,9 @@ interface KeyboardSettingsRepository {
     suspend fun setTouchHitTestMode(mode: TouchHitTestMode)
 
     suspend fun setAreaOverlapThresholdPercent(percent: Int)
+
+    /** Null when the user never picked a language. */
+    suspend fun getLanguageTag(): String?
+
+    suspend fun setLanguageTag(tag: String?)
 }

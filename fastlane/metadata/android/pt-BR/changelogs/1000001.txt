@@ -1,0 +1,9 @@
+Correções de bugs e melhorias de estabilidade.
+
+• As notas não ficam mais presas ao abrir as configurações ou deslocar o teclado
+• Multitoque mais preciso, inclusive com dois dedos em uma tecla
+• As mudanças de idioma agora são aplicadas de forma confiável
+• As caixas de diálogo das configurações rolam em telas pequenas
+• A barra de status acompanha o modo escuro
+• Saída MIDI por USB mais confiável
+• Corrigidos travamentos raros ao iniciar e ao abrir links

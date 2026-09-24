@@ -5,8 +5,12 @@ import android.content.pm.ApplicationInfo
 import android.os.Build
 import android.os.StrictMode
 import android.provider.Settings
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ProcessLifecycleOwner
 import dagger.hilt.android.HiltAndroidApp
 import dev.thomas_kiljanczyk.openpiano.core.analytics.AnalyticsHelper
+import dev.thomas_kiljanczyk.openpiano.core.audio.AudioEngine
 import dev.thomas_kiljanczyk.openpiano.core.common.allowingThreadDiskReads
 import dev.thomas_kiljanczyk.openpiano.data.LocaleManagerImpl
 import javax.inject.Inject
@@ -19,6 +23,9 @@ class OpenPianoApplication : Application() {
 
     @Inject
     lateinit var analyticsHelper: AnalyticsHelper
+
+    @Inject
+    lateinit var audioEngine: AudioEngine
 
     override fun onCreate() {
         super.onCreate()
@@ -36,6 +43,16 @@ class OpenPianoApplication : Application() {
         analyticsHelper.setCollectionEnabled(!isDebuggable && !isRunningInFirebaseTestLab)
 
         localeManager.applyLocaleOnStartup()
+
+        // Process-scoped, not per-activity: a finishing activity's onStop can land after its
+        // replacement's onStart and would stop the stream under the visible one.
+        ProcessLifecycleOwner.get().lifecycle.addObserver(
+            object : DefaultLifecycleObserver {
+                override fun onStart(owner: LifecycleOwner) = audioEngine.start()
+
+                override fun onStop(owner: LifecycleOwner) = audioEngine.stop()
+            },
+        )
     }
 
     private fun setupStrictMode() {

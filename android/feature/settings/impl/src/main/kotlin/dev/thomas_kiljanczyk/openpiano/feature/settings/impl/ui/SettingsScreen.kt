@@ -1,5 +1,7 @@
 package dev.thomas_kiljanczyk.openpiano.feature.settings.impl.ui
 
+import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -15,20 +17,24 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.thomas_kiljanczyk.openpiano.core.data.model.KeyboardSettings
 import dev.thomas_kiljanczyk.openpiano.core.model.KeyLabelMode
 import dev.thomas_kiljanczyk.openpiano.core.model.TouchHitTestMode
 import dev.thomas_kiljanczyk.openpiano.feature.settings.impl.R
 import dev.thomas_kiljanczyk.openpiano.feature.settings.impl.domain.LanguageOption
+import dev.thomas_kiljanczyk.openpiano.feature.settings.impl.domain.SupportedLanguages
 
 private const val DONATE_URL = "https://buymeacoffee.com/thomas.kiljanczyk.dev"
 private const val PRIVACY_POLICY_URL = "https://thomaskiljanczykdev.github.io/OpenPiano/privacy/"
@@ -36,10 +42,21 @@ private const val PRIVACY_POLICY_URL = "https://thomaskiljanczykdev.github.io/Op
 @Composable
 fun SettingsRoute(viewModel: SettingsViewModel = hiltViewModel(), onNavigateUp: () -> Unit) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    // The app locale can change outside this screen (system App language, backup restore).
+    LifecycleResumeEffect(LocalConfiguration.current.locales) {
+        viewModel.refreshLanguage()
+        onPauseOrDispose {}
+    }
+    val systemDefaultLabel = stringResource(R.string.settings_language_system_default)
+    val languageOptions = remember(viewModel.languageOptions, systemDefaultLabel) {
+        viewModel.languageOptions.map { option ->
+            option to (option.localeTag?.let(SupportedLanguages::autonym) ?: systemDefaultLabel)
+        }
+    }
     SettingsScreen(
         uiState = uiState,
         language = viewModel.language,
-        languageOptions = viewModel.languageOptions,
+        languageOptions = languageOptions,
         onLanguageChange = viewModel::selectLanguage,
         onLabelModeChange = viewModel::setLabelMode,
         onVisibleWhiteKeysChange = viewModel::setVisibleWhiteKeys,
@@ -54,7 +71,7 @@ fun SettingsRoute(viewModel: SettingsViewModel = hiltViewModel(), onNavigateUp: 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    uiState: SettingsUiState,
+    uiState: SettingsUiState?,
     language: LanguageOption,
     languageOptions: List<Pair<LanguageOption, String>>,
     onLanguageChange: (LanguageOption) -> Unit,
@@ -83,6 +100,7 @@ fun SettingsScreen(
             )
         },
     ) { contentPadding ->
+        if (uiState == null) return@Scaffold
         SettingsCardGroupContent(
             modifier = Modifier.padding(contentPadding).padding(16.dp),
             uiState = uiState,
@@ -156,7 +174,7 @@ private fun SettingsCardGroupContent(
         }
         item {
             TouchPrecisionRow(
-                visible = uiState.settings.touchHitTestMode == TouchHitTestMode.AREA,
+                visible = uiState.areaModeSupported && uiState.settings.touchHitTestMode == TouchHitTestMode.AREA,
                 value = uiState.settings.areaOverlapThresholdPercent,
                 onValueChange = onAreaOverlapThresholdPercentChange,
             )
@@ -189,7 +207,7 @@ private fun PrivacyPolicyRow() {
     SettingsRowButton(
         title = stringResource(R.string.settings_privacy_policy),
         subtitle = stringResource(R.string.settings_privacy_policy_summary),
-        onClick = { context.startActivity(Intent(Intent.ACTION_VIEW, PRIVACY_POLICY_URL.toUri())) },
+        onClick = { context.openUrl(PRIVACY_POLICY_URL) },
     )
 }
 
@@ -199,9 +217,16 @@ private fun DonateRow() {
     SettingsRowButton(
         title = stringResource(R.string.settings_donate),
         subtitle = stringResource(R.string.settings_donate_summary),
-        onClick = { context.startActivity(Intent(Intent.ACTION_VIEW, DONATE_URL.toUri())) },
+        onClick = { context.openUrl(DONATE_URL) },
         icon = ImageVector.vectorResource(R.drawable.coffee),
     )
+}
+
+private fun Context.openUrl(url: String) {
+    try {
+        startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
+    } catch (_: ActivityNotFoundException) {
+    }
 }
 
 @Composable

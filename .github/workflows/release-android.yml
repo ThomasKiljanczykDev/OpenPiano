@@ -32,21 +32,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Tag and versionName both derive from AppVersion.kt.
+      - name: Read app version
+        id: app_version
+        uses: ./.github/actions/app-version
+
       - name: Resolve version
         id: version
         working-directory: .
         run: |
           set -euo pipefail
-          f=android/build-logic/convention/src/main/kotlin/dev/thomas_kiljanczyk/openpiano/buildlogic/AppVersion.kt
-          read_component() {
-            grep -oE "const val $1 = [0-9]+" "$f" | grep -oE '[0-9]+$'
-          }
-          major=$(read_component MAJOR)
-          minor=$(read_component MINOR)
-          patch=$(read_component PATCH)
-          version="${major}.${minor}.${patch}"
-          version_code=$((major * 10000 + minor * 100 + patch))
+          version="${{ steps.app_version.outputs.version }}"
+          version_code="${{ steps.app_version.outputs.version_code }}"
           tag="v${version}"
 
           if git rev-parse -q --verify "refs/tags/${tag}" >/dev/null; then

@@ -90,7 +90,11 @@ private fun Modifier.overviewPointerInput(
     awaitPointerEventScope {
         var emitted = -1
         while (true) {
-            val change = awaitPointerEvent().changes.firstOrNull { it.pressed } ?: continue
+            val change = awaitPointerEvent().changes.firstOrNull { it.pressed }
+            if (change == null) {
+                emitted = -1
+                continue
+            }
             val touched = (change.position.x / current.whiteKeyWidth).toInt()
             val index = (touched - visibleWhiteKeys / 2).coerceIn(0, highest)
             val note = Piano.whiteKeyAt(index)

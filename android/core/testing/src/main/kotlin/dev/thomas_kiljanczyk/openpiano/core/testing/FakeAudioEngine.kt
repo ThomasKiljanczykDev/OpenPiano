@@ -12,6 +12,8 @@ sealed interface AudioEvent {
     ) : AudioEvent
 
     data class NoteOff(val note: Int) : AudioEvent
+
+    data object AllNotesOff : AudioEvent
 }
 
 class FakeAudioEngine : AudioEngine {
@@ -26,9 +28,6 @@ class FakeAudioEngine : AudioEngine {
         private set
 
     var reverbEnabled: Boolean = true
-        private set
-
-    var released: Boolean = false
         private set
 
     fun setReady(value: Boolean) {
@@ -53,11 +52,11 @@ class FakeAudioEngine : AudioEngine {
         synchronized(recorded) { recorded.add(AudioEvent.NoteOff(note)) }
     }
 
-    override fun setReverbEnabled(enabled: Boolean) {
-        reverbEnabled = enabled
+    override fun allNotesOff() {
+        synchronized(recorded) { recorded.add(AudioEvent.AllNotesOff) }
     }
 
-    override fun release() {
-        released = true
+    override fun setReverbEnabled(enabled: Boolean) {
+        reverbEnabled = enabled
     }
 }
