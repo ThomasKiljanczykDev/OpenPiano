@@ -1,0 +1,28 @@
+/* Generated once with @material/material-color-utilities 0.4.0: SchemeTonalSpot, seed #E8A33D, spec 2025,
+   contrast 0, neutral/neutral-variant chroma 3/6. primary, on-primary, surface and background overridden to
+   the app's LightScheme/DarkScheme (core:designsystem Theme.kt). Dark tertiary-container/on-tertiary-container
+   overridden to tertiary tones 35/90. link is the generated primary in light; Amber fails contrast on Ivory. */
+
+:root {
+    --md-sys-color-background: light-dark(#e6e1e5, #1b1b1f);
+    --md-sys-color-on-background: light-dark(#38312b, #efe3d9);
+    --md-sys-color-surface: light-dark(#f7f5f0, #141414);
+    --md-sys-color-surface-container-low: light-dark(#fcf2ea, #16130f);
+    --md-sys-color-surface-container: light-dark(#f6ece4, #1d1914);
+    --md-sys-color-surface-container-high: light-dark(#f1e6dd, #241f19);
+    --md-sys-color-surface-container-highest: light-dark(#ece1d6, #2b251e);
+    --md-sys-color-on-surface: light-dark(#38312b, #efe3d9);
+    --md-sys-color-on-surface-variant: light-dark(#665e56, #b3a9a0);
+    --md-sys-color-outline: light-dark(#827971, #7c746c);
+    --md-sys-color-outline-variant: light-dark(#bab0a7, #4e473f);
+    --md-sys-color-primary: #e8a33d;
+    --md-sys-color-on-primary: #141414;
+    --md-sys-color-primary-container: light-dark(#fac681, #6b4c21);
+    --md-sys-color-on-primary-container: light-dark(#613e04, #ffdeb7);
+    --md-sys-color-secondary: light-dark(#715b41, #dec2a2);
+    --md-sys-color-secondary-container: light-dark(#fbdebc, #4a3820);
+    --md-sys-color-on-secondary-container: light-dark(#624e35, #d6bb9b);
+    --md-sys-color-tertiary-container: light-dark(#eca98e, #784630);
+    --md-sys-color-on-tertiary-container: light-dark(#562b17, #ffdbcd);
+    --op-color-link: light-dark(#7e571e, #e8a33d);
+}
