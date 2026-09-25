@@ -8,7 +8,9 @@ on:
     branches: [main]
     paths:
       - "PRIVACY.md"
+      - ".github/pages/**"
       - ".github/workflows/cd-privacy-policy.yml"
+      - "fastlane/metadata/android/en-US/images/icon.png"
   workflow_dispatch:
 
 permissions:
@@ -26,20 +28,22 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Stage site
+      - name: Build site
         run: |
-          mkdir -p site/privacy
-          {
-            printf -- '---\ntitle: OpenPiano privacy policy\npermalink: /privacy/\n---\n\n'
-            cat PRIVACY.md
-          } > site/privacy/index.md
-          printf -- '---\npermalink: /\n---\n\n[Privacy policy](privacy/)\n' > site/index.md
+          mkdir -p _site/privacy
+          cp .github/pages/index.html _site/
+          cp .github/pages/{colors.css,style.css,theme.js} _site/privacy/
+          cp fastlane/metadata/android/en-US/images/icon.png _site/privacy/
+          docker run --rm -v "$PWD:/data" -u "$(id -u):$(id -g)" pandoc/core:3.11 \
+            PRIVACY.md \
+            --from markdown+autolink_bare_uris \
+            --lua-filter .github/pages/policy.lua \
+            --template .github/pages/template.html \
+            --section-divs \
+            --syntax-highlighting=none \
+            --output _site/privacy/index.html
 
       - uses: actions/configure-pages@v6
-      - uses: actions/jekyll-build-pages@v1
-        with:
-          source: site
-          destination: _site
       - uses: actions/upload-pages-artifact@v5
 
   deploy:
