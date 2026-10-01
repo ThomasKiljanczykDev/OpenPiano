@@ -31,6 +31,7 @@ import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.thomas_kiljanczyk.openpiano.core.data.model.KeyboardSettings
 import dev.thomas_kiljanczyk.openpiano.core.model.KeyLabelMode
+import dev.thomas_kiljanczyk.openpiano.core.model.ThemeMode
 import dev.thomas_kiljanczyk.openpiano.core.model.TouchHitTestMode
 import dev.thomas_kiljanczyk.openpiano.feature.settings.impl.R
 import dev.thomas_kiljanczyk.openpiano.feature.settings.impl.domain.LanguageOption
@@ -58,6 +59,7 @@ fun SettingsRoute(viewModel: SettingsViewModel = hiltViewModel(), onNavigateUp: 
         language = viewModel.language,
         languageOptions = languageOptions,
         onLanguageChange = viewModel::selectLanguage,
+        onThemeModeChange = viewModel::setThemeMode,
         onLabelModeChange = viewModel::setLabelMode,
         onVisibleWhiteKeysChange = viewModel::setVisibleWhiteKeys,
         onReverbEnabledChange = viewModel::setReverbEnabled,
@@ -75,6 +77,7 @@ fun SettingsScreen(
     language: LanguageOption,
     languageOptions: List<Pair<LanguageOption, String>>,
     onLanguageChange: (LanguageOption) -> Unit,
+    onThemeModeChange: (ThemeMode) -> Unit,
     onLabelModeChange: (KeyLabelMode) -> Unit,
     onVisibleWhiteKeysChange: (Int) -> Unit,
     onReverbEnabledChange: (Boolean) -> Unit,
@@ -107,6 +110,7 @@ fun SettingsScreen(
             language = language,
             languageOptions = languageOptions,
             onLanguageChange = onLanguageChange,
+            onThemeModeChange = onThemeModeChange,
             onLabelModeChange = onLabelModeChange,
             onVisibleWhiteKeysChange = onVisibleWhiteKeysChange,
             onReverbEnabledChange = onReverbEnabledChange,
@@ -123,6 +127,7 @@ private fun SettingsCardGroupContent(
     language: LanguageOption,
     languageOptions: List<Pair<LanguageOption, String>>,
     onLanguageChange: (LanguageOption) -> Unit,
+    onThemeModeChange: (ThemeMode) -> Unit,
     onLabelModeChange: (KeyLabelMode) -> Unit,
     onVisibleWhiteKeysChange: (Int) -> Unit,
     onReverbEnabledChange: (Boolean) -> Unit,
@@ -139,6 +144,9 @@ private fun SettingsCardGroupContent(
                 options = languageOptions,
                 onValueChange = onLanguageChange,
             )
+        }
+        item {
+            ThemeModeRow(themeMode = uiState.themeMode, onThemeModeChange = onThemeModeChange)
         }
         item {
             LabelModeRow(labelMode = uiState.settings.labelMode, onLabelModeChange = onLabelModeChange)
@@ -227,6 +235,20 @@ private fun Context.openUrl(url: String) {
         startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
     } catch (_: ActivityNotFoundException) {
     }
+}
+
+@Composable
+private fun ThemeModeRow(themeMode: ThemeMode, onThemeModeChange: (ThemeMode) -> Unit) {
+    SettingsRowWithRadioButtonGroupDialog(
+        title = stringResource(R.string.settings_theme),
+        value = themeMode,
+        options = listOf(
+            ThemeMode.SYSTEM to stringResource(R.string.settings_theme_system_default),
+            ThemeMode.LIGHT to stringResource(R.string.settings_theme_light),
+            ThemeMode.DARK to stringResource(R.string.settings_theme_dark),
+        ),
+        onValueChange = onThemeModeChange,
+    )
 }
 
 @Composable

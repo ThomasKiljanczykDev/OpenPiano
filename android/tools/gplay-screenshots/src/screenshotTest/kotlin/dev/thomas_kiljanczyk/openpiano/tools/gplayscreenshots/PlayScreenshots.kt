@@ -60,6 +60,7 @@ fun Screenshot3Settings() {
                 LanguageOption.SYSTEM to stringResource(R.string.settings_language_system_default),
             ) + SHIPPED_TAGS.map { LanguageOption(it) to SupportedLanguages.autonym(it) },
             onLanguageChange = {},
+            onThemeModeChange = {},
             onLabelModeChange = {},
             onVisibleWhiteKeysChange = {},
             onReverbEnabledChange = {},

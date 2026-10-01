@@ -4,6 +4,10 @@
     <string name="settings_navigate_up">Voltar</string>
     <string name="settings_language">Idioma</string>
     <string name="settings_language_system_default">Padrão do sistema</string>
+    <string name="settings_theme">Tema</string>
+    <string name="settings_theme_system_default">Padrão do sistema</string>
+    <string name="settings_theme_light">Claro</string>
+    <string name="settings_theme_dark">Escuro</string>
     <string name="settings_label_mode">Rótulos das teclas</string>
     <string name="settings_label_mode_none">Desativado</string>
     <string name="settings_label_mode_c_only">Somente Dó</string>

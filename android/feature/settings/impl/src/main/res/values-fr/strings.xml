@@ -4,6 +4,10 @@
     <string name="settings_navigate_up">Retour</string>
     <string name="settings_language">Langue</string>
     <string name="settings_language_system_default">Système par défaut</string>
+    <string name="settings_theme">Thème</string>
+    <string name="settings_theme_system_default">Système par défaut</string>
+    <string name="settings_theme_light">Clair</string>
+    <string name="settings_theme_dark">Sombre</string>
     <string name="settings_label_mode">Étiquettes des touches</string>
     <string name="settings_label_mode_none">Désactivé</string>
     <string name="settings_label_mode_c_only">Do uniquement</string>

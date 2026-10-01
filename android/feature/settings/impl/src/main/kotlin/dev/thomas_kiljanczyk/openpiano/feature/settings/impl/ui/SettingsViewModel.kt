@@ -10,6 +10,7 @@ import dev.thomas_kiljanczyk.openpiano.core.data.repository.UserPreferencesRepos
 import dev.thomas_kiljanczyk.openpiano.core.data.touch.TouchAreaSupport
 import dev.thomas_kiljanczyk.openpiano.core.midi.MidiOutputPort
 import dev.thomas_kiljanczyk.openpiano.core.model.KeyLabelMode
+import dev.thomas_kiljanczyk.openpiano.core.model.ThemeMode
 import dev.thomas_kiljanczyk.openpiano.core.model.TouchHitTestMode
 import dev.thomas_kiljanczyk.openpiano.feature.settings.impl.domain.LanguageOption
 import dev.thomas_kiljanczyk.openpiano.feature.settings.impl.domain.LanguageOptionsProvider
@@ -42,6 +43,7 @@ class SettingsViewModel @Inject constructor(
             settingsRepository.keyboardSettings,
             midiOutputPort.isConnected,
             flowOf(touchAreaSupport.isSupported),
+            settingsRepository.themeMode,
             ::SettingsUiState,
         )
             .stateIn(
@@ -57,6 +59,10 @@ class SettingsViewModel @Inject constructor(
 
     fun refreshLanguage() {
         language = localeManager.getSavedLanguage()
+    }
+
+    fun setThemeMode(mode: ThemeMode) {
+        viewModelScope.launch { settingsRepository.setThemeMode(mode) }
     }
 
     fun setLabelMode(mode: KeyLabelMode) {

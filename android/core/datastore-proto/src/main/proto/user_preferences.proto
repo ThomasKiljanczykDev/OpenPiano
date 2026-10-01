@@ -17,6 +17,7 @@ message UserPreferences {
   TouchHitTestMode touch_hit_test_mode = 7;
   int32 area_overlap_threshold_percent = 8;
   string language_tag = 9;
+  ThemeMode theme_mode = 10;
 }
 
 enum KeyLabelMode {
@@ -36,4 +37,11 @@ enum TouchHitTestMode {
   TOUCH_HIT_TEST_MODE_UNSPECIFIED = 0;
   TOUCH_HIT_TEST_MODE_POINT = 1;
   TOUCH_HIT_TEST_MODE_AREA = 2;
+}
+
+enum ThemeMode {
+  THEME_MODE_UNSPECIFIED = 0;
+  THEME_MODE_SYSTEM = 1;
+  THEME_MODE_LIGHT = 2;
+  THEME_MODE_DARK = 3;
 }

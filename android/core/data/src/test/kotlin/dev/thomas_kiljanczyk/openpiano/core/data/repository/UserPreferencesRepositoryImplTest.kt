@@ -8,6 +8,7 @@ import dev.thomas_kiljanczyk.openpiano.core.datastore.proto.UserPreferences
 import dev.thomas_kiljanczyk.openpiano.core.datastore.proto.UserPreferencesSerializer
 import dev.thomas_kiljanczyk.openpiano.core.model.KeyLabelMode
 import dev.thomas_kiljanczyk.openpiano.core.model.Piano
+import dev.thomas_kiljanczyk.openpiano.core.model.ThemeMode
 import dev.thomas_kiljanczyk.openpiano.core.model.TouchHitTestMode
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.flow.Flow
@@ -319,6 +320,35 @@ class UserPreferencesRepositoryImplTest {
         repository.keyboardSettings.test {
             awaitItem()
             repository.setLanguageTag("de")
+            expectNoEvents()
+        }
+    }
+
+    @Test
+    fun `theme mode defaults to system`() = runTest {
+        repository().themeMode.test {
+            assertEquals(ThemeMode.SYSTEM, awaitItem())
+        }
+    }
+
+    @Test
+    fun `theme mode round trips`() = runTest {
+        val repository = repository()
+
+        for (mode in ThemeMode.entries.reversed()) {
+            repository.setThemeMode(mode)
+            repository.themeMode.test {
+                assertEquals(mode, awaitItem())
+            }
+        }
+    }
+
+    @Test
+    fun `theme mode change does not re-emit keyboard settings`() = runTest {
+        val repository = repository()
+        repository.keyboardSettings.test {
+            awaitItem()
+            repository.setThemeMode(ThemeMode.DARK)
             expectNoEvents()
         }
     }

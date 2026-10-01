@@ -3,6 +3,7 @@ package dev.thomas_kiljanczyk.openpiano.feature.settings.impl.ui
 import app.cash.turbine.test
 import dev.thomas_kiljanczyk.openpiano.core.data.model.KeyboardSettings
 import dev.thomas_kiljanczyk.openpiano.core.model.KeyLabelMode
+import dev.thomas_kiljanczyk.openpiano.core.model.ThemeMode
 import dev.thomas_kiljanczyk.openpiano.core.model.TouchHitTestMode
 import dev.thomas_kiljanczyk.openpiano.core.testing.FakeMidiOutputPort
 import dev.thomas_kiljanczyk.openpiano.core.testing.FakeTouchAreaSupport
@@ -81,8 +82,11 @@ class SettingsViewModelTest {
     fun `uiState reflects repository settings`() = runTest {
         val stored = KeyboardSettings.DEFAULT.copy(visibleWhiteKeys = 14, labelMode = KeyLabelMode.ALL)
         repository.emit(stored)
+        repository.setThemeMode(ThemeMode.DARK)
         viewModel().uiState.filterNotNull().test {
-            assertEquals(stored, awaitItem().settings)
+            val state = awaitItem()
+            assertEquals(stored, state.settings)
+            assertEquals(ThemeMode.DARK, state.themeMode)
         }
     }
 
@@ -112,6 +116,7 @@ class SettingsViewModelTest {
         viewModel.setMidiOutputEnabled(true)
         viewModel.setTouchHitTestMode(TouchHitTestMode.POINT)
         viewModel.setAreaOverlapThresholdPercent(KeyboardSettings.AREA_OVERLAP_THRESHOLD_PERCENT_RANGE.first)
+        viewModel.setThemeMode(ThemeMode.LIGHT)
 
         val expected = KeyboardSettings.DEFAULT.copy(
             visibleWhiteKeys = max,
@@ -122,6 +127,7 @@ class SettingsViewModelTest {
             areaOverlapThresholdPercent = KeyboardSettings.AREA_OVERLAP_THRESHOLD_PERCENT_RANGE.first,
         )
         assertEquals(expected, repository.keyboardSettings.value)
+        assertEquals(ThemeMode.LIGHT, repository.themeMode.value)
     }
 
     private class FakeLocaleManager(var saved: LanguageOption) : LocaleManager {
