@@ -10,7 +10,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -25,7 +24,6 @@ import dev.thomas_kiljanczyk.openpiano.core.model.Piano
 private const val VIEWPORT_FILL_ALPHA = 0.15f
 private const val OUTSIDE_SCRIM_ALPHA = 0.55f
 private val ViewportBorderWidth = 3.dp
-private val ViewportCornerRadius = 4.dp
 
 /**
  * Miniature of the whole 88-key piano with the played window drawn over it. Touching or dragging
@@ -80,22 +78,19 @@ fun KeyboardOverview(
         )
 
         val stroke = ViewportBorderWidth.toPx()
-        val corner = CornerRadius(ViewportCornerRadius.toPx())
         // Inset by half the stroke so the border isn't clipped at the canvas edges.
         val inset = stroke / 2
         val topLeft = Offset(left + inset, inset)
         val viewport = Size(right - left - stroke, this.size.height - stroke)
-        drawRoundRect(
+        drawRect(
             color = viewportColor.copy(alpha = VIEWPORT_FILL_ALPHA),
             topLeft = topLeft,
             size = viewport,
-            cornerRadius = corner,
         )
-        drawRoundRect(
+        drawRect(
             color = viewportColor,
             topLeft = topLeft,
             size = viewport,
-            cornerRadius = corner,
             style = Stroke(width = stroke),
         )
     }
