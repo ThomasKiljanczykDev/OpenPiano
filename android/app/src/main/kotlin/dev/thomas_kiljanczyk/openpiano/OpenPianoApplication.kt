@@ -13,6 +13,7 @@ import dev.thomas_kiljanczyk.openpiano.core.analytics.AnalyticsHelper
 import dev.thomas_kiljanczyk.openpiano.core.audio.AudioEngine
 import dev.thomas_kiljanczyk.openpiano.core.common.allowingThreadDiskReads
 import dev.thomas_kiljanczyk.openpiano.data.LocaleManagerImpl
+import dev.thomas_kiljanczyk.openpiano.data.ThemeManager
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -20,6 +21,9 @@ class OpenPianoApplication : Application() {
 
     @Inject
     lateinit var localeManager: LocaleManagerImpl
+
+    @Inject
+    lateinit var themeManager: ThemeManager
 
     @Inject
     lateinit var analyticsHelper: AnalyticsHelper
@@ -43,6 +47,7 @@ class OpenPianoApplication : Application() {
         analyticsHelper.setCollectionEnabled(!isDebuggable && !isRunningInFirebaseTestLab)
 
         localeManager.applyLocaleOnStartup()
+        themeManager.applyThemeOnStartup()
 
         // Process-scoped, not per-activity: a finishing activity's onStop can land after its
         // replacement's onStart and would stop the stream under the visible one.

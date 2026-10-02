@@ -4,6 +4,10 @@
     <string name="settings_navigate_up">Wstecz</string>
     <string name="settings_language">Język</string>
     <string name="settings_language_system_default">Domyślny systemowy</string>
+    <string name="settings_theme">Motyw</string>
+    <string name="settings_theme_system_default">Domyślny systemowy</string>
+    <string name="settings_theme_light">Jasny</string>
+    <string name="settings_theme_dark">Ciemny</string>
     <string name="settings_label_mode">Etykiety klawiszy</string>
     <string name="settings_label_mode_none">Wyłączone</string>
     <string name="settings_label_mode_c_only">Tylko C</string>

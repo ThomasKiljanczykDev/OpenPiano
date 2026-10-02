@@ -25,6 +25,7 @@ fun SettingsScreenDarkScreenshot() {
                     LanguageOption("en") to "English",
                 ),
                 onLanguageChange = {},
+                onThemeModeChange = {},
                 onLabelModeChange = {},
                 onVisibleWhiteKeysChange = {},
                 onReverbEnabledChange = {},

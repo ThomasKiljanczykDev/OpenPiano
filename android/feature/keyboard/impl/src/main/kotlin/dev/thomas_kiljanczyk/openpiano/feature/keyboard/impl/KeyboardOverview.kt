@@ -10,18 +10,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.dp
 import dev.thomas_kiljanczyk.openpiano.core.designsystem.theme.LocalKeyColors
 import dev.thomas_kiljanczyk.openpiano.core.model.KeyboardLayout
 import dev.thomas_kiljanczyk.openpiano.core.model.Piano
 
-private const val VIEWPORT_FILL_ALPHA = 0.25f
-private const val VIEWPORT_BORDER_WIDTH = 3f
+private const val VIEWPORT_FILL_ALPHA = 0.15f
+private const val OUTSIDE_SCRIM_ALPHA = 0.55f
+private val ViewportBorderWidth = 3.dp
+private val ViewportCornerRadius = 4.dp
 
 /**
  * Miniature of the whole 88-key piano with the played window drawn over it. Touching or dragging
@@ -37,6 +41,7 @@ fun KeyboardOverview(
     var size by remember { mutableStateOf(IntSize.Zero) }
     val keyColors = LocalKeyColors.current
     val viewportColor = MaterialTheme.colorScheme.primary
+    val scrimColor = MaterialTheme.colorScheme.scrim
     val currentOnLowestNoteChange by rememberUpdatedState(onLowestNoteChange)
 
     val layout = remember(size) {
@@ -65,17 +70,33 @@ fun KeyboardOverview(
         val first = Piano.whiteKeyIndexOf(lowestNote)
         val last = (first + visibleWhiteKeys - 1).coerceAtMost(current.whiteKeys.lastIndex)
         val left = current.whiteKeys[first].left
-        val viewport = Size(current.whiteKeys[last].right - left, this.size.height)
+        val right = current.whiteKeys[last].right
+        val scrim = scrimColor.copy(alpha = OUTSIDE_SCRIM_ALPHA)
+        drawRect(color = scrim, size = Size(left, this.size.height))
         drawRect(
-            color = viewportColor.copy(alpha = VIEWPORT_FILL_ALPHA),
-            topLeft = Offset(left, 0f),
-            size = viewport,
+            color = scrim,
+            topLeft = Offset(right, 0f),
+            size = Size(this.size.width - right, this.size.height),
         )
-        drawRect(
-            color = viewportColor,
-            topLeft = Offset(left, 0f),
+
+        val stroke = ViewportBorderWidth.toPx()
+        val corner = CornerRadius(ViewportCornerRadius.toPx())
+        // Inset by half the stroke so the border isn't clipped at the canvas edges.
+        val inset = stroke / 2
+        val topLeft = Offset(left + inset, inset)
+        val viewport = Size(right - left - stroke, this.size.height - stroke)
+        drawRoundRect(
+            color = viewportColor.copy(alpha = VIEWPORT_FILL_ALPHA),
+            topLeft = topLeft,
             size = viewport,
-            style = Stroke(width = VIEWPORT_BORDER_WIDTH),
+            cornerRadius = corner,
+        )
+        drawRoundRect(
+            color = viewportColor,
+            topLeft = topLeft,
+            size = viewport,
+            cornerRadius = corner,
+            style = Stroke(width = stroke),
         )
     }
 }

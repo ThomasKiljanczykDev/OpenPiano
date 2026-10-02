@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import dev.thomas_kiljanczyk.openpiano.core.data.model.KeyboardSettings
 import dev.thomas_kiljanczyk.openpiano.core.datastore.proto.UserPreferences
 import dev.thomas_kiljanczyk.openpiano.core.model.KeyLabelMode
+import dev.thomas_kiljanczyk.openpiano.core.model.ThemeMode
 import dev.thomas_kiljanczyk.openpiano.core.model.TouchHitTestMode
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -17,17 +18,18 @@ import java.io.IOException
 import javax.inject.Inject
 import dev.thomas_kiljanczyk.openpiano.core.datastore.proto.KeyLabelMode as KeyLabelModeProto
 import dev.thomas_kiljanczyk.openpiano.core.datastore.proto.ReverbState as ReverbStateProto
+import dev.thomas_kiljanczyk.openpiano.core.datastore.proto.ThemeMode as ThemeModeProto
 import dev.thomas_kiljanczyk.openpiano.core.datastore.proto.TouchHitTestMode as TouchHitTestModeProto
 
 class UserPreferencesRepositoryImpl @Inject constructor(private val dataStore: DataStore<UserPreferences>) :
     UserPreferencesRepository {
 
-    override val keyboardSettings: Flow<KeyboardSettings> = flow {
+    private val preferences: Flow<UserPreferences> = flow {
         var emittedAny = false
         dataStore.data
             .retryWhen { cause, attempt ->
                 if (cause !is IOException) return@retryWhen false
-                Log.w(TAG, "Reading keyboard settings failed", cause)
+                Log.w(TAG, "Reading user preferences failed", cause)
                 if (!emittedAny) emit(UserPreferences.getDefaultInstance())
                 delay(retryDelayMillis(attempt))
                 true
@@ -36,7 +38,13 @@ class UserPreferencesRepositoryImpl @Inject constructor(private val dataStore: D
                 emittedAny = true
                 emit(it)
             }
-    }.map(UserPreferences::toDomain).distinctUntilChanged()
+    }
+
+    override val keyboardSettings: Flow<KeyboardSettings> =
+        preferences.map(UserPreferences::toDomain).distinctUntilChanged()
+
+    override val themeMode: Flow<ThemeMode> =
+        preferences.map { it.themeMode.toDomain() ?: ThemeMode.SYSTEM }.distinctUntilChanged()
 
     override suspend fun setVisibleWhiteKeys(count: Int) {
         val clamped = count.coerceIn(KeyboardSettings.VISIBLE_WHITE_KEYS_RANGE)
@@ -76,6 +84,10 @@ class UserPreferencesRepositoryImpl @Inject constructor(private val dataStore: D
     override suspend fun setAreaOverlapThresholdPercent(percent: Int) {
         val clamped = percent.coerceIn(KeyboardSettings.AREA_OVERLAP_THRESHOLD_PERCENT_RANGE)
         update { it.toBuilder().setAreaOverlapThresholdPercent(clamped).build() }
+    }
+
+    override suspend fun setThemeMode(mode: ThemeMode) {
+        update { it.toBuilder().setThemeMode(mode.toProto()).build() }
     }
 
     override suspend fun getLanguageTag(): String? =
@@ -157,4 +169,17 @@ private fun TouchHitTestModeProto.toDomain(): TouchHitTestMode? = when (this) {
 private fun TouchHitTestMode.toProto(): TouchHitTestModeProto = when (this) {
     TouchHitTestMode.POINT -> TouchHitTestModeProto.TOUCH_HIT_TEST_MODE_POINT
     TouchHitTestMode.AREA -> TouchHitTestModeProto.TOUCH_HIT_TEST_MODE_AREA
+}
+
+private fun ThemeModeProto.toDomain(): ThemeMode? = when (this) {
+    ThemeModeProto.THEME_MODE_SYSTEM -> ThemeMode.SYSTEM
+    ThemeModeProto.THEME_MODE_LIGHT -> ThemeMode.LIGHT
+    ThemeModeProto.THEME_MODE_DARK -> ThemeMode.DARK
+    ThemeModeProto.THEME_MODE_UNSPECIFIED, ThemeModeProto.UNRECOGNIZED -> null
+}
+
+private fun ThemeMode.toProto(): ThemeModeProto = when (this) {
+    ThemeMode.SYSTEM -> ThemeModeProto.THEME_MODE_SYSTEM
+    ThemeMode.LIGHT -> ThemeModeProto.THEME_MODE_LIGHT
+    ThemeMode.DARK -> ThemeModeProto.THEME_MODE_DARK
 }

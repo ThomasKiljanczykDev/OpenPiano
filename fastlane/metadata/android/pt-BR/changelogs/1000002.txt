@@ -1,0 +1,2 @@
+• Configuração de tema: sistema, claro ou escuro
+• Visão geral do teclado: as teclas visíveis ficam mais destacadas
