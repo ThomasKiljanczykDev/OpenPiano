@@ -45,6 +45,7 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionOnScreen
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -117,7 +118,9 @@ private fun TourOverlay(
     val allPresent = bounds.size == step.anchors.size
 
     // A missing anchor falls back to a centred card rather than skipping the step.
-    var settled by remember(step) { mutableStateOf(false) }
+    // Previews never run effects, so they start settled and fully faded in.
+    val inPreview = LocalInspectionMode.current
+    var settled by remember(step) { mutableStateOf(inPreview) }
     LaunchedEffect(step, allPresent) {
         if (!allPresent) delay(ANCHOR_SETTLE_MILLIS)
         settled = true
@@ -129,7 +132,7 @@ private fun TourOverlay(
         presentAnchors.forEach { registry.bringIntoView(it) }
     }
 
-    val fade = remember { Animatable(0f) }
+    val fade = remember { Animatable(if (inPreview) 1f else 0f) }
     LaunchedEffect(Unit) { fade.animateTo(1f, tween(TOUR_ENTER_FADE_MILLIS)) }
 
     // Anchors are screen space; rebase onto the overlay.

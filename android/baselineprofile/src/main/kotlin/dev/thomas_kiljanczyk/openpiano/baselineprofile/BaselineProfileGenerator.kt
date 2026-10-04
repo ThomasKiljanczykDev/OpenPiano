@@ -1,5 +1,6 @@
 package dev.thomas_kiljanczyk.openpiano.baselineprofile
 
+import androidx.benchmark.macro.MacrobenchmarkScope
 import androidx.benchmark.macro.junit4.BaselineProfileRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.uiautomator.By
@@ -13,6 +14,15 @@ private const val PACKAGE_NAME = "dev.thomas_kiljanczyk.openpiano"
 private const val SETTINGS_LABEL = "Settings"
 private const val KEY_TAP_INSET_PX = 40
 private const val WAIT_TIMEOUT_MS = 5_000L
+private const val TOUR_SKIP_LABEL = "Skip"
+private const val TOUR_APPEAR_TIMEOUT_MS = 3_000L
+
+// The first-run tour blocks input and hides the keyboard from UiAutomator until dismissed.
+private fun MacrobenchmarkScope.dismissTutorialIfShown() {
+    val skip = device.wait(Until.findObject(By.text(TOUR_SKIP_LABEL)), TOUR_APPEAR_TIMEOUT_MS)
+    skip?.click()
+    device.waitForIdle()
+}
 
 @RunWith(AndroidJUnit4::class)
 class BaselineProfileGenerator {
@@ -30,6 +40,7 @@ class BaselineProfileGenerator {
     fun tapKey() = rule.collect(packageName = PACKAGE_NAME) {
         pressHome()
         startActivityAndWait()
+        dismissTutorialIfShown()
 
         val keyboardSelector = By.res(PIANO_KEYBOARD_TEST_TAG)
         device.wait(Until.hasObject(keyboardSelector), WAIT_TIMEOUT_MS)
@@ -42,6 +53,7 @@ class BaselineProfileGenerator {
     fun navigateToSettings() = rule.collect(packageName = PACKAGE_NAME) {
         pressHome()
         startActivityAndWait()
+        dismissTutorialIfShown()
 
         val settingsIconSelector = By.desc(SETTINGS_LABEL)
         device.wait(Until.hasObject(settingsIconSelector), WAIT_TIMEOUT_MS)
