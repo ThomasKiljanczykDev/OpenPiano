@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">OpenPiano</string>
+    <string name="tour_keyboard_welcome_title">Te damos la bienvenida a OpenPiano</string>
+    <string name="tour_keyboard_welcome_body">Un breve recorrido por el teclado y sus ajustes. Puedes omitirlo en cualquier momento.</string>
+    <string name="tour_keyboard_keys_title">Toca las teclas</string>
+    <string name="tour_keyboard_keys_body">Toca una tecla para tocarla. Usa varios dedos para acordes o desliza para hacer un glissando.</string>
+    <string name="tour_keyboard_overview_title">Vista general del teclado</string>
+    <string name="tour_keyboard_overview_body">Las 88 teclas de un vistazo. Toca o arrastra para mover la ventana visible.</string>
+    <string name="tour_keyboard_shift_title">Desplaza las teclas</string>
+    <string name="tour_keyboard_shift_body">Mueve las teclas visibles una tecla o una octava completa.</string>
+    <string name="tour_keyboard_lowest_note_title">Nota más grave</string>
+    <string name="tour_keyboard_lowest_note_body">Aquí ves la nota visible situada más a la izquierda.</string>
+    <string name="tour_keyboard_settings_title">Ajustes</string>
+    <string name="tour_keyboard_settings_body">Aquí hay más opciones. Vamos a verlas.</string>
+    <string name="tour_settings_intro_title">Pantalla de ajustes</string>
+    <string name="tour_settings_intro_body">A diferencia del teclado, esta pantalla puede girar a vertical.</string>
+    <string name="tour_settings_visible_keys_title">Teclas blancas visibles</string>
+    <string name="tour_settings_visible_keys_body">Elige cuántas teclas blancas caben en la pantalla.</string>
+    <string name="tour_settings_touch_mode_title">Modo táctil</string>
+    <string name="tour_settings_touch_mode_body">Punto toca la tecla bajo el centro de la yema. Área toca cada tecla que el dedo cubra lo suficiente.</string>
+    <string name="tour_settings_touch_precision_title">Precisión táctil</string>
+    <string name="tour_settings_touch_precision_body">En modo Área, define cuánto debe cubrir el dedo una tecla para sonar.</string>
+    <string name="tour_settings_replay_title">Repítelo cuando quieras</string>
+    <string name="tour_settings_replay_body">Puedes repetir este recorrido desde aquí cuando quieras.</string>
 </resources>

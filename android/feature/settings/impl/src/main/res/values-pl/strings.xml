@@ -22,6 +22,8 @@
     <string name="settings_touch_hit_test_mode_area">Obszar</string>
     <string name="settings_touch_hit_test_mode_unsupported">Ekran dotykowy Twojego urządzenia nie zgłasza rozmiaru dotyku</string>
     <string name="settings_touch_precision">Precyzja dotyku</string>
+    <string name="settings_replay_tutorial">Pokaż samouczek ponownie</string>
+    <string name="settings_replay_tutorial_summary">Odtwórz przewodnik jeszcze raz</string>
     <string name="settings_privacy_policy">Polityka prywatności</string>
     <string name="settings_privacy_policy_summary">Sprawdź, jak OpenPiano przetwarza Twoje dane</string>
     <string name="settings_donate">Postaw mi kawę</string>

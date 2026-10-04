@@ -90,6 +90,7 @@ dependencies {
     implementation(projects.core.data)
     implementation(projects.core.designsystem)
     implementation(projects.core.midi)
+    implementation(projects.core.tutorial)
     implementation(projects.core.ui)
     implementation(projects.feature.keyboard.impl)
     implementation(projects.feature.settings.impl)
@@ -100,9 +101,11 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.process)
+    implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.profileinstaller)
 
+    testImplementation(projects.core.testing)
     testImplementation(libs.junit)
 
     baselineProfile(projects.baselineprofile)

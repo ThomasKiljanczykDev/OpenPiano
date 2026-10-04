@@ -22,6 +22,8 @@
     <string name="settings_touch_hit_test_mode_area">Área</string>
     <string name="settings_touch_hit_test_mode_unsupported">La pantalla táctil de tu dispositivo no informa el tamaño del contacto</string>
     <string name="settings_touch_precision">Precisión táctil</string>
+    <string name="settings_replay_tutorial">Mostrar el tutorial de nuevo</string>
+    <string name="settings_replay_tutorial_summary">Repite la visita guiada</string>
     <string name="settings_privacy_policy">Política de privacidad</string>
     <string name="settings_privacy_policy_summary">Consulta cómo OpenPiano trata tus datos</string>
     <string name="settings_donate">Invítame a un café</string>

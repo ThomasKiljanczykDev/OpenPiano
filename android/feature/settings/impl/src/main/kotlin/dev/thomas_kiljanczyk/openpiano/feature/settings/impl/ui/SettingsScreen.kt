@@ -33,6 +33,10 @@ import dev.thomas_kiljanczyk.openpiano.core.data.model.KeyboardSettings
 import dev.thomas_kiljanczyk.openpiano.core.model.KeyLabelMode
 import dev.thomas_kiljanczyk.openpiano.core.model.ThemeMode
 import dev.thomas_kiljanczyk.openpiano.core.model.TouchHitTestMode
+import dev.thomas_kiljanczyk.openpiano.core.tutorial.LocalTourExpansion
+import dev.thomas_kiljanczyk.openpiano.core.tutorial.TourAnchor
+import dev.thomas_kiljanczyk.openpiano.core.tutorial.TourExpandable
+import dev.thomas_kiljanczyk.openpiano.core.tutorial.tourAnchor
 import dev.thomas_kiljanczyk.openpiano.feature.settings.impl.R
 import dev.thomas_kiljanczyk.openpiano.feature.settings.impl.domain.LanguageOption
 import dev.thomas_kiljanczyk.openpiano.feature.settings.impl.domain.SupportedLanguages
@@ -66,6 +70,10 @@ fun SettingsRoute(viewModel: SettingsViewModel = hiltViewModel(), onNavigateUp: 
         onMidiOutputEnabledChange = viewModel::setMidiOutputEnabled,
         onTouchHitTestModeChange = viewModel::setTouchHitTestMode,
         onAreaOverlapThresholdPercentChange = viewModel::setAreaOverlapThresholdPercent,
+        onReplayTutorial = {
+            viewModel.replayTutorial()
+            onNavigateUp()
+        },
         onNavigateUp = onNavigateUp,
     )
 }
@@ -84,6 +92,7 @@ fun SettingsScreen(
     onMidiOutputEnabledChange: (Boolean) -> Unit,
     onTouchHitTestModeChange: (TouchHitTestMode) -> Unit,
     onAreaOverlapThresholdPercentChange: (Int) -> Unit,
+    onReplayTutorial: () -> Unit,
     onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -117,6 +126,7 @@ fun SettingsScreen(
             onMidiOutputEnabledChange = onMidiOutputEnabledChange,
             onTouchHitTestModeChange = onTouchHitTestModeChange,
             onAreaOverlapThresholdPercentChange = onAreaOverlapThresholdPercentChange,
+            onReplayTutorial = onReplayTutorial,
         )
     }
 }
@@ -134,6 +144,7 @@ private fun SettingsCardGroupContent(
     onMidiOutputEnabledChange: (Boolean) -> Unit,
     onTouchHitTestModeChange: (TouchHitTestMode) -> Unit,
     onAreaOverlapThresholdPercentChange: (Int) -> Unit,
+    onReplayTutorial: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     SettingsCardGroup(modifier = modifier) {
@@ -157,6 +168,7 @@ private fun SettingsCardGroupContent(
                 value = uiState.settings.visibleWhiteKeys,
                 valueRange = KeyboardSettings.VISIBLE_WHITE_KEYS_RANGE,
                 onValueChange = onVisibleWhiteKeysChange,
+                modifier = Modifier.tourAnchor(TourAnchor.SETTINGS_VISIBLE_KEYS),
             )
         }
         item {
@@ -178,6 +190,7 @@ private fun SettingsCardGroupContent(
                 mode = uiState.settings.touchHitTestMode,
                 supported = uiState.areaModeSupported,
                 onModeChange = onTouchHitTestModeChange,
+                modifier = Modifier.tourAnchor(TourAnchor.SETTINGS_TOUCH_MODE),
             )
         }
         item {
@@ -187,6 +200,7 @@ private fun SettingsCardGroupContent(
                 onValueChange = onAreaOverlapThresholdPercentChange,
             )
         }
+        item { ReplayTutorialRow(onClick = onReplayTutorial) }
         item { PrivacyPolicyRow() }
         item { DonateRow() }
     }
@@ -195,7 +209,7 @@ private fun SettingsCardGroupContent(
 @Composable
 private fun TouchPrecisionRow(visible: Boolean, value: Int, onValueChange: (Int) -> Unit) {
     AnimatedVisibility(
-        visible = visible,
+        visible = visible || LocalTourExpansion.current.isForcedOpen(TourExpandable.PRECISION_SLIDER),
         enter = fadeIn() + expandVertically(),
         exit = fadeOut() + shrinkVertically(),
     ) {
@@ -205,8 +219,19 @@ private fun TouchPrecisionRow(visible: Boolean, value: Int, onValueChange: (Int)
             valueRange = KeyboardSettings.AREA_OVERLAP_THRESHOLD_PERCENT_RANGE,
             onValueChange = onValueChange,
             valueLabel = { "$it%" },
+            modifier = Modifier.tourAnchor(TourAnchor.SETTINGS_TOUCH_PRECISION),
         )
     }
+}
+
+@Composable
+private fun ReplayTutorialRow(onClick: () -> Unit) {
+    SettingsRowButton(
+        title = stringResource(R.string.settings_replay_tutorial),
+        subtitle = stringResource(R.string.settings_replay_tutorial_summary),
+        onClick = onClick,
+        modifier = Modifier.tourAnchor(TourAnchor.SETTINGS_REPLAY_TUTORIAL),
+    )
 }
 
 @Composable
@@ -270,6 +295,7 @@ private fun TouchHitTestModeRow(
     mode: TouchHitTestMode,
     supported: Boolean,
     onModeChange: (TouchHitTestMode) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     SettingsRowWithRadioButtonGroupDialog(
         title = stringResource(R.string.settings_touch_hit_test_mode),
@@ -279,6 +305,7 @@ private fun TouchHitTestModeRow(
             TouchHitTestMode.AREA to stringResource(R.string.settings_touch_hit_test_mode_area),
         ),
         onValueChange = onModeChange,
+        modifier = modifier,
         enabled = supported,
         subtitle = if (supported) null else stringResource(R.string.settings_touch_hit_test_mode_unsupported),
     )

@@ -22,6 +22,8 @@
     <string name="settings_touch_hit_test_mode_area">Area</string>
     <string name="settings_touch_hit_test_mode_unsupported">Your device\'s touchscreen doesn\'t report touch size</string>
     <string name="settings_touch_precision">Touch precision</string>
+    <string name="settings_replay_tutorial">Show tutorial again</string>
+    <string name="settings_replay_tutorial_summary">Replay the guided tour</string>
     <string name="settings_privacy_policy">Privacy policy</string>
     <string name="settings_privacy_policy_summary">Read how OpenPiano handles your data</string>
     <string name="settings_donate">Buy me a coffee</string>

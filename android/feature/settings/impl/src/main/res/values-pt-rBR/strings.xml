@@ -22,6 +22,8 @@
     <string name="settings_touch_hit_test_mode_area">Área</string>
     <string name="settings_touch_hit_test_mode_unsupported">A tela sensível ao toque do seu aparelho não informa o tamanho do toque</string>
     <string name="settings_touch_precision">Precisão de toque</string>
+    <string name="settings_replay_tutorial">Mostrar o tutorial novamente</string>
+    <string name="settings_replay_tutorial_summary">Repita o tour guiado</string>
     <string name="settings_privacy_policy">Política de privacidade</string>
     <string name="settings_privacy_policy_summary">Saiba como o OpenPiano trata os seus dados</string>
     <string name="settings_donate">Me pague um café</string>
