@@ -20,8 +20,10 @@ No ads, no in-app purchases, no account.
 
 ### Keyboard
 
-Touch the keys to play. The overview strip above the keys doubles as a scrollbar,
+Touch the keys to play. Multitouch plays chords; sliding across keys plays a glissando.
+The overview strip above the keys highlights the visible window and doubles as a scrollbar,
 so you can jump anywhere across the full 88-key range.
+The arrow buttons shift the window by one key or one octave.
 
 <p float="left">
   <img src="../docs/images/OpenPiano-keyboard-light.png" alt="Keyboard - light theme" height="360">
@@ -30,10 +32,20 @@ so you can jump anywhere across the full 88-key range.
 
 ### Settings
 
-Key labels, visible key count, reverb, MIDI output, and touch hit-testing mode (point vs. area,
-with a configurable overlap threshold) are all user-adjustable.
+Grouped into three sections:
+
+- **Keyboard**: visible key count, touch mode (point vs. area, with a configurable overlap threshold), key labels.
+- **Sound & MIDI**: reverb, USB MIDI output.
+- **General**: language, theme (system, light, dark), guided tour replay.
+
+The keyboard is landscape-only; the settings screen also rotates to portrait.
 
 <img src="../docs/images/OpenPiano-settings.png" alt="Settings" height="640">
+
+### Guided tour
+
+On first launch, a short spotlight tour walks through the keyboard controls and the key settings.
+Replay it any time from **Settings › Show tutorial again**.
 
 ## Build
 
@@ -41,11 +53,13 @@ The Gradle build lives in `android/`.
 
 ```
 cd android
-./gradlew assembleDebug
-./gradlew installDebug          # run on a connected device
+./gradlew assembleFossDebug
+./gradlew installFossDebug      # run on a connected device
 ```
 
 Requires JDK 17 and the Android SDK with the NDK installed (native code is built as part of `assemble`).
+The `play` flavor needs your own `app/src/play/google-services.json`;
+see [AGENTS.md](../AGENTS.md#product-flavors).
 See [AGENTS.md](../AGENTS.md#verification) for the full verification commands (detekt, lint, tests).
 
 ## Module structure
