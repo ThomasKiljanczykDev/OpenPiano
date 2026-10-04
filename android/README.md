@@ -33,7 +33,7 @@ so you can jump anywhere across the full 88-key range.
 Key labels, visible key count, reverb, MIDI output, and touch hit-testing mode (point vs. area,
 with a configurable overlap threshold) are all user-adjustable.
 
-<img src="../docs/images/OpenPiano-settings.png" alt="Settings" height="480">
+<img src="../docs/images/OpenPiano-settings.png" alt="Settings" height="640">
 
 ## Build
 
