@@ -4,6 +4,7 @@ name: Publish store listing
 # nothing ships until "Send for review" in Play Console.
 # fastlane/metadata is the source of truth; this overwrites Console edits.
 # Release notes are cd-release-notes.yml: they need release permission the listing does not.
+# No --version_code: supply attaches the edit to the track's latest release, so the repo version need not be on Play yet.
 
 on:
   workflow_dispatch:
@@ -71,11 +72,6 @@ jobs:
           working-directory: fastlane
           bundler-cache: true
 
-      # supply resolves a track release even for an images-only edit; the version code must exist on that track.
-      - name: Resolve version code
-        id: version
-        uses: ./.github/actions/app-version
-
       - name: Check Google Cloud configuration
         run: |
           missing=
@@ -105,7 +101,6 @@ jobs:
             --metadata_path metadata/android \
             --json_key '${{ steps.auth.outputs.credentials_file_path }}' \
             --track '${{ inputs.track }}' \
-            --version_code '${{ steps.version.outputs.version_code }}' \
             --skip_upload_changelogs \
             --skip_upload_apk --skip_upload_aab \
             --changes_not_sent_for_review \

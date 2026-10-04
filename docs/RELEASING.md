@@ -43,7 +43,9 @@ so change the text in the repository, not the Console.
 They are split because release notes need the service account's release permission,
 which the listing does not.
 `track` selects the track holding the release the edit attaches to;
-supply resolves one even for a listing-only edit.
+supply needs one even for a listing-only edit.
+`cd-store-listing.yml` attaches to the track's latest release, so the repository version need not be on Play yet.
+`cd-release-notes.yml` attaches to the repository's `versionCode`, which must already be on that track.
 `dry_run` (default on) has Play validate, then discard the edit.
 Nothing ships until "Send for review" in Play Console.
 
