@@ -67,6 +67,7 @@ fun Screenshot3Settings() {
             onMidiOutputEnabledChange = {},
             onTouchHitTestModeChange = {},
             onAreaOverlapThresholdPercentChange = {},
+            onReplayTutorial = {},
             onNavigateUp = {},
         )
     }

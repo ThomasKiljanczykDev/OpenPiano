@@ -24,6 +24,7 @@ dependencies {
     screenshotDependency(projects.core.designsystem)
     screenshotDependency(projects.core.model)
     screenshotDependency(projects.core.data)
+    screenshotDependency(projects.core.tutorial)
     screenshotDependency(projects.feature.keyboard.impl)
     screenshotDependency(projects.feature.settings.impl)
 

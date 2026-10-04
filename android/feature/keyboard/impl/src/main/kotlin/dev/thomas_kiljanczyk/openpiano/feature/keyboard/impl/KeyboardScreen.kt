@@ -44,6 +44,8 @@ import dev.thomas_kiljanczyk.openpiano.core.audio.DEFAULT_VELOCITY
 import dev.thomas_kiljanczyk.openpiano.core.midi.MidiOutputPort
 import dev.thomas_kiljanczyk.openpiano.core.model.Note
 import dev.thomas_kiljanczyk.openpiano.core.model.Piano
+import dev.thomas_kiljanczyk.openpiano.core.tutorial.TourAnchor
+import dev.thomas_kiljanczyk.openpiano.core.tutorial.tourAnchor
 import dev.thomas_kiljanczyk.openpiano.core.ui.LockDisplayCutoutMode
 import dev.thomas_kiljanczyk.openpiano.core.ui.LockScreenOrientation
 
@@ -107,6 +109,7 @@ fun KeyboardScreen(
                         .exclude(WindowInsets.displayCutout)
                         .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom),
                 )
+                .tourAnchor(TourAnchor.KEYBOARD_KEYS)
                 .testTag(PIANO_KEYBOARD_TEST_TAG),
         ) {
             PianoKeyboard(
@@ -139,37 +142,42 @@ private fun OverviewRow(
         modifier = Modifier.fillMaxWidth().height(OVERVIEW_HEIGHT).padding(horizontal = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        ShiftButton(
-            icon = R.drawable.keyboard_double_arrow_left,
-            description = stringResource(R.string.keyboard_octave_down),
-            enabled = uiState.canShiftDown,
-            onClick = { onShiftKeys(-Piano.WHITE_KEYS_PER_OCTAVE) },
-        )
-        ShiftButton(
-            icon = R.drawable.keyboard_arrow_left,
-            description = stringResource(R.string.keyboard_key_down),
-            enabled = uiState.canShiftDown,
-            onClick = { onShiftKeys(-1) },
-        )
+        Row(modifier = Modifier.tourAnchor(TourAnchor.KEYBOARD_SHIFT_DOWN)) {
+            ShiftButton(
+                icon = R.drawable.keyboard_double_arrow_left,
+                description = stringResource(R.string.keyboard_octave_down),
+                enabled = uiState.canShiftDown,
+                onClick = { onShiftKeys(-Piano.WHITE_KEYS_PER_OCTAVE) },
+            )
+            ShiftButton(
+                icon = R.drawable.keyboard_arrow_left,
+                description = stringResource(R.string.keyboard_key_down),
+                enabled = uiState.canShiftDown,
+                onClick = { onShiftKeys(-1) },
+            )
+        }
         KeyboardOverview(
             lowestNote = uiState.lowestNote,
             visibleWhiteKeys = uiState.settings.visibleWhiteKeys,
             onLowestNoteChange = onLowestNoteChange,
             modifier = Modifier.weight(1f).padding(horizontal = 4.dp, vertical = 4.dp)
+                .tourAnchor(TourAnchor.KEYBOARD_OVERVIEW)
                 .semantics { contentDescription = overviewDescription },
         )
-        ShiftButton(
-            icon = R.drawable.keyboard_arrow_right,
-            description = stringResource(R.string.keyboard_key_up),
-            enabled = uiState.canShiftUp,
-            onClick = { onShiftKeys(1) },
-        )
-        ShiftButton(
-            icon = R.drawable.keyboard_double_arrow_right,
-            description = stringResource(R.string.keyboard_octave_up),
-            enabled = uiState.canShiftUp,
-            onClick = { onShiftKeys(Piano.WHITE_KEYS_PER_OCTAVE) },
-        )
+        Row(modifier = Modifier.tourAnchor(TourAnchor.KEYBOARD_SHIFT_UP)) {
+            ShiftButton(
+                icon = R.drawable.keyboard_arrow_right,
+                description = stringResource(R.string.keyboard_key_up),
+                enabled = uiState.canShiftUp,
+                onClick = { onShiftKeys(1) },
+            )
+            ShiftButton(
+                icon = R.drawable.keyboard_double_arrow_right,
+                description = stringResource(R.string.keyboard_octave_up),
+                enabled = uiState.canShiftUp,
+                onClick = { onShiftKeys(Piano.WHITE_KEYS_PER_OCTAVE) },
+            )
+        }
     }
 }
 
@@ -198,9 +206,10 @@ private fun KeyboardControls(uiState: KeyboardUiState, onOpenSettings: () -> Uni
         Text(
             text = Note.fullName(uiState.lowestNote),
             style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.tourAnchor(TourAnchor.KEYBOARD_LOWEST_NOTE),
         )
         Spacer(Modifier.weight(1f))
-        IconButton(onClick = onOpenSettings) {
+        IconButton(onClick = onOpenSettings, modifier = Modifier.tourAnchor(TourAnchor.KEYBOARD_SETTINGS)) {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.settings),
                 contentDescription = stringResource(R.string.keyboard_settings),

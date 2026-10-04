@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="settings_title">Paramètres</string>
+    <string name="settings_section_keyboard">Clavier</string>
+    <string name="settings_section_sound_midi">Son et MIDI</string>
+    <string name="settings_section_general">Général</string>
     <string name="settings_navigate_up">Retour</string>
     <string name="settings_language">Langue</string>
     <string name="settings_language_system_default">Système par défaut</string>
@@ -22,6 +25,8 @@
     <string name="settings_touch_hit_test_mode_area">Zone</string>
     <string name="settings_touch_hit_test_mode_unsupported">L\'écran tactile de votre appareil ne signale pas la taille du contact</string>
     <string name="settings_touch_precision">Précision tactile</string>
+    <string name="settings_replay_tutorial">Afficher à nouveau le tutoriel</string>
+    <string name="settings_replay_tutorial_summary">Rejouer la visite guidée</string>
     <string name="settings_privacy_policy">Politique de confidentialité</string>
     <string name="settings_privacy_policy_summary">Découvre comment OpenPiano traite tes données</string>
     <string name="settings_donate">Offrez-moi un café</string>

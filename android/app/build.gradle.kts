@@ -31,6 +31,7 @@ android {
         applicationId = "dev.thomas_kiljanczyk.openpiano"
         versionCode = AppVersion.versionCode
         versionName = AppVersion.versionName
+        testInstrumentationRunner = "dev.thomas_kiljanczyk.openpiano.HiltTestRunner"
     }
 
     signingConfigs {
@@ -90,6 +91,7 @@ dependencies {
     implementation(projects.core.data)
     implementation(projects.core.designsystem)
     implementation(projects.core.midi)
+    implementation(projects.core.tutorial)
     implementation(projects.core.ui)
     implementation(projects.feature.keyboard.impl)
     implementation(projects.feature.settings.impl)
@@ -100,10 +102,19 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.process)
+    implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.profileinstaller)
 
+    testImplementation(projects.core.testing)
     testImplementation(libs.junit)
+
+    androidTestImplementation(projects.core.testing)
+    androidTestImplementation(projects.feature.keyboard.impl)
+    androidTestImplementation(libs.androidx.test.junit)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.hilt.android.testing)
+    "kspAndroidTest"(libs.hilt.compiler)
 
     baselineProfile(projects.baselineprofile)
 

@@ -89,6 +89,10 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch { settingsRepository.setAreaOverlapThresholdPercent(percent) }
     }
 
+    fun replayTutorial() {
+        viewModelScope.launch { settingsRepository.setTutorialCompletedVersion(0) }
+    }
+
     private companion object {
         const val STOP_TIMEOUT_MILLIS = 5_000L
     }

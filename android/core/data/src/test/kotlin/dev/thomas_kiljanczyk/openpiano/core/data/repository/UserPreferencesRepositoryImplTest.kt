@@ -352,4 +352,36 @@ class UserPreferencesRepositoryImplTest {
             expectNoEvents()
         }
     }
+
+    @Test
+    fun `tutorial completed version defaults to zero`() = runTest {
+        repository().tutorialCompletedVersion.test {
+            assertEquals(0, awaitItem())
+        }
+    }
+
+    @Test
+    fun `tutorial completed version round trips`() = runTest {
+        val repository = repository()
+
+        repository.setTutorialCompletedVersion(3)
+        repository.tutorialCompletedVersion.test {
+            assertEquals(3, awaitItem())
+        }
+
+        repository.setTutorialCompletedVersion(0)
+        repository.tutorialCompletedVersion.test {
+            assertEquals(0, awaitItem())
+        }
+    }
+
+    @Test
+    fun `tutorial version change does not re-emit keyboard settings`() = runTest {
+        val repository = repository()
+        repository.keyboardSettings.test {
+            awaitItem()
+            repository.setTutorialCompletedVersion(1)
+            expectNoEvents()
+        }
+    }
 }

@@ -32,6 +32,7 @@ fun SettingsScreenDarkScreenshot() {
                 onMidiOutputEnabledChange = {},
                 onTouchHitTestModeChange = {},
                 onAreaOverlapThresholdPercentChange = {},
+                onReplayTutorial = {},
                 onNavigateUp = {},
             )
     }

@@ -18,6 +18,7 @@ message UserPreferences {
   int32 area_overlap_threshold_percent = 8;
   string language_tag = 9;
   ThemeMode theme_mode = 10;
+  int32 tutorial_completed_version = 11;
 }
 
 enum KeyLabelMode {

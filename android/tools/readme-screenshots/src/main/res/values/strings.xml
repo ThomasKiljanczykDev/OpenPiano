@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tour_preview_overview_title">Keyboard overview</string>
+    <string name="tour_preview_overview_body">All 88 keys at a glance. Tap or drag to move the visible window.</string>
+    <string name="tour_preview_precision_title">Touch precision</string>
+    <string name="tour_preview_precision_body">In Area mode, set how much finger overlap a key needs to sound.</string>
+</resources>

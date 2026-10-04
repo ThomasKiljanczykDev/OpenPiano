@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">OpenPiano</string>
+    <string name="tour_keyboard_welcome_title">Witaj w OpenPiano</string>
+    <string name="tour_keyboard_welcome_body">Krótki przewodnik po klawiaturze i ustawieniach. Możesz go pominąć w każdej chwili.</string>
+    <string name="tour_keyboard_keys_title">Graj na klawiszach</string>
+    <string name="tour_keyboard_keys_body">Dotknij klawisza, aby go zagrać. Kilka palców to akordy, a przesunięcie po klawiszach daje glissando.</string>
+    <string name="tour_keyboard_overview_title">Przegląd klawiatury</string>
+    <string name="tour_keyboard_overview_body">Wszystkie 88 klawiszy naraz. Dotknij lub przeciągnij, aby przesunąć widoczny fragment.</string>
+    <string name="tour_keyboard_shift_title">Przesuwanie klawiszy</string>
+    <string name="tour_keyboard_shift_body">Przesuń widoczne klawisze o jeden klawisz lub całą oktawę.</string>
+    <string name="tour_keyboard_lowest_note_title">Najniższy dźwięk</string>
+    <string name="tour_keyboard_lowest_note_body">Tutaj widać skrajny lewy widoczny dźwięk.</string>
+    <string name="tour_keyboard_settings_title">Ustawienia</string>
+    <string name="tour_keyboard_settings_body">Więcej opcji znajdziesz tutaj. Zajrzyjmy tam.</string>
+    <string name="tour_settings_intro_title">Ekran ustawień</string>
+    <string name="tour_settings_intro_body">W przeciwieństwie do klawiatury ten ekran można obrócić do pionu.</string>
+    <string name="tour_settings_visible_keys_title">Widoczne białe klawisze</string>
+    <string name="tour_settings_visible_keys_body">Wybierz, ile białych klawiszy mieści się na ekranie.</string>
+    <string name="tour_settings_touch_mode_title">Tryb dotyku</string>
+    <string name="tour_settings_touch_mode_body">Punkt gra klawisz pod środkiem opuszka. Obszar gra każdy klawisz wystarczająco zakryty palcem.</string>
+    <string name="tour_settings_touch_precision_title">Precyzja dotyku</string>
+    <string name="tour_settings_touch_precision_body">W trybie Obszar ustaw, jak mocno palec musi zakryć klawisz, by zabrzmiał.</string>
+    <string name="tour_settings_replay_title">Powtórz w dowolnym momencie</string>
+    <string name="tour_settings_replay_body">Możesz uruchomić ten przewodnik ponownie stąd w każdej chwili.</string>
 </resources>

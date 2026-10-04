@@ -130,6 +130,13 @@ class SettingsViewModelTest {
         assertEquals(ThemeMode.LIGHT, repository.themeMode.value)
     }
 
+    @Test
+    fun `replayTutorial resets the completed version`() = runTest {
+        repository.setTutorialCompletedVersion(1)
+        viewModel().replayTutorial()
+        assertEquals(0, repository.tutorialCompletedVersion.value)
+    }
+
     private class FakeLocaleManager(var saved: LanguageOption) : LocaleManager {
         val updates = mutableListOf<LanguageOption>()
         var ignoreUpdates = false

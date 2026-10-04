@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">OpenPiano</string>
+    <string name="tour_keyboard_welcome_title">Willkommen bei OpenPiano</string>
+    <string name="tour_keyboard_welcome_body">Eine kurze Tour durch die Tastatur und ihre Einstellungen. Du kannst sie jederzeit überspringen.</string>
+    <string name="tour_keyboard_keys_title">Tasten spielen</string>
+    <string name="tour_keyboard_keys_body">Tippe auf eine Taste, um sie zu spielen. Mit mehreren Fingern spielst du Akkorde, durch Wischen ein Glissando.</string>
+    <string name="tour_keyboard_overview_title">Tastaturübersicht</string>
+    <string name="tour_keyboard_overview_body">Alle 88 Tasten auf einen Blick. Tippe oder ziehe, um den sichtbaren Bereich zu verschieben.</string>
+    <string name="tour_keyboard_shift_title">Tasten verschieben</string>
+    <string name="tour_keyboard_shift_body">Verschiebe den sichtbaren Bereich um eine Taste oder eine ganze Oktave.</string>
+    <string name="tour_keyboard_lowest_note_title">Tiefster Ton</string>
+    <string name="tour_keyboard_lowest_note_body">Hier siehst du den linken sichtbaren Ton.</string>
+    <string name="tour_keyboard_settings_title">Einstellungen</string>
+    <string name="tour_keyboard_settings_body">Weitere Optionen findest du hier. Schauen wir sie uns an.</string>
+    <string name="tour_settings_intro_title">Einstellungen</string>
+    <string name="tour_settings_intro_body">Anders als die Tastatur lässt sich dieser Bildschirm ins Hochformat drehen.</string>
+    <string name="tour_settings_visible_keys_title">Sichtbare weiße Tasten</string>
+    <string name="tour_settings_visible_keys_body">Lege fest, wie viele weiße Tasten auf den Bildschirm passen.</string>
+    <string name="tour_settings_touch_mode_title">Touch-Modus</string>
+    <string name="tour_settings_touch_mode_body">Punkt spielt die Taste unter der Fingerspitzenmitte. Fläche spielt jede Taste, die dein Finger genug bedeckt.</string>
+    <string name="tour_settings_touch_precision_title">Touch-Präzision</string>
+    <string name="tour_settings_touch_precision_body">Im Flächenmodus legst du fest, wie stark der Finger eine Taste überdecken muss.</string>
+    <string name="tour_settings_replay_title">Jederzeit wiederholen</string>
+    <string name="tour_settings_replay_body">Du kannst diese Tour hier jederzeit erneut starten.</string>
 </resources>

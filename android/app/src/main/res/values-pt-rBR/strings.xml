@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">OpenPiano</string>
+    <string name="tour_keyboard_welcome_title">Boas-vindas ao OpenPiano</string>
+    <string name="tour_keyboard_welcome_body">Um tour rápido pelo teclado e suas configurações. Você pode pulá-lo a qualquer momento.</string>
+    <string name="tour_keyboard_keys_title">Toque as teclas</string>
+    <string name="tour_keyboard_keys_body">Toque em uma tecla para tocá-la. Use vários dedos para acordes ou deslize para um glissando.</string>
+    <string name="tour_keyboard_overview_title">Visão geral do teclado</string>
+    <string name="tour_keyboard_overview_body">Todas as 88 teclas de relance. Toque ou arraste para mover a janela visível.</string>
+    <string name="tour_keyboard_shift_title">Desloque as teclas</string>
+    <string name="tour_keyboard_shift_body">Mova as teclas visíveis uma tecla ou uma oitava inteira.</string>
+    <string name="tour_keyboard_lowest_note_title">Nota mais grave</string>
+    <string name="tour_keyboard_lowest_note_body">A nota visível mais à esquerda aparece aqui.</string>
+    <string name="tour_keyboard_settings_title">Configurações</string>
+    <string name="tour_keyboard_settings_body">Há mais opções aqui. Vamos dar uma olhada.</string>
+    <string name="tour_settings_intro_title">Tela de configurações</string>
+    <string name="tour_settings_intro_body">Diferente do teclado, esta tela pode girar para o modo retrato.</string>
+    <string name="tour_settings_visible_keys_title">Teclas brancas visíveis</string>
+    <string name="tour_settings_visible_keys_body">Escolha quantas teclas brancas cabem na tela.</string>
+    <string name="tour_settings_touch_mode_title">Modo de toque</string>
+    <string name="tour_settings_touch_mode_body">Ponto toca a tecla sob o centro da ponta do dedo. Área toca toda tecla que o dedo cobrir o bastante.</string>
+    <string name="tour_settings_touch_precision_title">Precisão do toque</string>
+    <string name="tour_settings_touch_precision_body">No modo Área, defina quanto o dedo precisa cobrir uma tecla para ela soar.</string>
+    <string name="tour_settings_replay_title">Repita quando quiser</string>
+    <string name="tour_settings_replay_body">Você pode refazer este tour a partir daqui quando quiser.</string>
 </resources>

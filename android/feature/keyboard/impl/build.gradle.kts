@@ -11,6 +11,7 @@ dependencies {
     implementation(projects.core.audio)
     implementation(projects.core.data)
     implementation(projects.core.midi)
+    implementation(projects.core.tutorial)
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)

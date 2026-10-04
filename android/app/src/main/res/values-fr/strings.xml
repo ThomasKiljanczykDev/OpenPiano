@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">OpenPiano</string>
+    <string name="tour_keyboard_welcome_title">Bienvenue dans OpenPiano</string>
+    <string name="tour_keyboard_welcome_body">Un tour rapide du clavier et de ses réglages. Vous pouvez l\'ignorer à tout moment.</string>
+    <string name="tour_keyboard_keys_title">Jouer les touches</string>
+    <string name="tour_keyboard_keys_body">Touchez une touche pour la jouer. Utilisez plusieurs doigts pour les accords ou glissez pour un glissando.</string>
+    <string name="tour_keyboard_overview_title">Aperçu du clavier</string>
+    <string name="tour_keyboard_overview_body">Les 88 touches d\'un coup d\'œil. Touchez ou faites glisser pour déplacer la zone visible.</string>
+    <string name="tour_keyboard_shift_title">Décaler les touches</string>
+    <string name="tour_keyboard_shift_body">Déplacez les touches visibles d\'une touche ou d\'une octave entière.</string>
+    <string name="tour_keyboard_lowest_note_title">Note la plus grave</string>
+    <string name="tour_keyboard_lowest_note_body">La note visible la plus à gauche s\'affiche ici.</string>
+    <string name="tour_keyboard_settings_title">Réglages</string>
+    <string name="tour_keyboard_settings_body">D\'autres options se trouvent ici. Jetons-y un œil.</string>
+    <string name="tour_settings_intro_title">Écran des réglages</string>
+    <string name="tour_settings_intro_body">Contrairement au clavier, cet écran peut passer en mode portrait.</string>
+    <string name="tour_settings_visible_keys_title">Touches blanches visibles</string>
+    <string name="tour_settings_visible_keys_body">Choisissez combien de touches blanches tiennent à l\'écran.</string>
+    <string name="tour_settings_touch_mode_title">Mode tactile</string>
+    <string name="tour_settings_touch_mode_body">Point joue la touche sous le centre du bout du doigt. Zone joue chaque touche suffisamment couverte par le doigt.</string>
+    <string name="tour_settings_touch_precision_title">Précision tactile</string>
+    <string name="tour_settings_touch_precision_body">En mode Zone, réglez le recouvrement nécessaire du doigt pour qu\'une touche sonne.</string>
+    <string name="tour_settings_replay_title">À revoir à tout moment</string>
+    <string name="tour_settings_replay_body">Vous pouvez relancer ce tour d\'ici quand vous voulez.</string>
 </resources>

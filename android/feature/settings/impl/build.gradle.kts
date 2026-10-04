@@ -10,6 +10,7 @@ android {
 dependencies {
     implementation(projects.core.data)
     implementation(projects.core.midi)
+    implementation(projects.core.tutorial)
 
     implementation(libs.androidx.core.ktx)
 

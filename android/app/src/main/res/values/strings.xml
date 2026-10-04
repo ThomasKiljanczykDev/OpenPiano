@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">OpenPiano</string>
+    <string name="tour_keyboard_welcome_title">Welcome to OpenPiano</string>
+    <string name="tour_keyboard_welcome_body">A quick tour of the keyboard and its settings. You can skip it at any time.</string>
+    <string name="tour_keyboard_keys_title">Play the keys</string>
+    <string name="tour_keyboard_keys_body">Tap a key to play it. Use several fingers for chords, or slide across keys for a glissando.</string>
+    <string name="tour_keyboard_overview_title">Keyboard overview</string>
+    <string name="tour_keyboard_overview_body">All 88 keys at a glance. Tap or drag to move the visible window.</string>
+    <string name="tour_keyboard_shift_title">Shift the keys</string>
+    <string name="tour_keyboard_shift_body">Move the visible keys by one key or a whole octave.</string>
+    <string name="tour_keyboard_lowest_note_title">Lowest note</string>
+    <string name="tour_keyboard_lowest_note_body">The leftmost visible note is shown here.</string>
+    <string name="tour_keyboard_settings_title">Settings</string>
+    <string name="tour_keyboard_settings_body">More options live here. Let\'s take a look.</string>
+    <string name="tour_settings_intro_title">Settings screen</string>
+    <string name="tour_settings_intro_body">Unlike the keyboard, this screen can rotate to portrait.</string>
+    <string name="tour_settings_visible_keys_title">Visible white keys</string>
+    <string name="tour_settings_visible_keys_body">Choose how many white keys fit on screen.</string>
+    <string name="tour_settings_touch_mode_title">Touch mode</string>
+    <string name="tour_settings_touch_mode_body">Point plays the key under the centre of your fingertip. Area plays every key your finger covers enough of.</string>
+    <string name="tour_settings_touch_precision_title">Touch precision</string>
+    <string name="tour_settings_touch_precision_body">In Area mode, set how much finger overlap a key needs to sound.</string>
+    <string name="tour_settings_replay_title">Replay any time</string>
+    <string name="tour_settings_replay_body">Replay this tour from here whenever you like.</string>
 </resources>
