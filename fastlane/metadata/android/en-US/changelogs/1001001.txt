@@ -1,0 +1,1 @@
+• Back gesture from Settings in portrait no longer gets cancelled by the screen rotating

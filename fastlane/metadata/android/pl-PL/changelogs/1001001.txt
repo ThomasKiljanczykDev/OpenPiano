@@ -1,0 +1,1 @@
+• Gest cofania z Ustawień w orientacji pionowej nie jest już przerywany przez obrót ekranu
