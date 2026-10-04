@@ -18,6 +18,7 @@ import dev.thomas_kiljanczyk.openpiano.tools.screenshotmocks.MockKeyboardScreen
 
 // 1890x1063 px; Play caps aspect at 2:1.
 private const val DEVICE = "spec:width=720dp,height=405dp,dpi=420"
+private const val PORTRAIT_DEVICE = "spec:width=405dp,height=720dp,dpi=420"
 private const val WIDE_VISIBLE_WHITE_KEYS = 17
 private val SHIPPED_TAGS = listOf("en", "pl", "es", "pt-BR", "de", "fr")
 
@@ -29,6 +30,14 @@ private val SHIPPED_TAGS = listOf("en", "pl", "es", "pt-BR", "de", "fr")
 @Preview(name = "pl-PL", locale = "pl", device = DEVICE)
 @Preview(name = "pt-BR", locale = "pt-rBR", device = DEVICE)
 annotation class PlayLocalePreviews
+
+@Preview(name = "en-US", locale = "en", device = PORTRAIT_DEVICE)
+@Preview(name = "de-DE", locale = "de", device = PORTRAIT_DEVICE)
+@Preview(name = "es-ES", locale = "es", device = PORTRAIT_DEVICE)
+@Preview(name = "fr-FR", locale = "fr", device = PORTRAIT_DEVICE)
+@Preview(name = "pl-PL", locale = "pl", device = PORTRAIT_DEVICE)
+@Preview(name = "pt-BR", locale = "pt-rBR", device = PORTRAIT_DEVICE)
+annotation class PlayLocalePortraitPreviews
 
 @PreviewTest
 @PlayLocalePreviews
@@ -49,7 +58,7 @@ fun Screenshot2KeyboardLight() {
 }
 
 @PreviewTest
-@PlayLocalePreviews
+@PlayLocalePortraitPreviews
 @Composable
 fun Screenshot3Settings() {
     OpenPianoTheme(darkTheme = true, dynamicColor = false) {
