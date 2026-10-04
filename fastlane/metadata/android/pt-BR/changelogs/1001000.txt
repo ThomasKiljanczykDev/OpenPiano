@@ -1,0 +1,3 @@
+• Tour guiado: uma breve apresentação do teclado e das configurações na primeira abertura
+• Repita quando quiser em Configurações › Mostrar o tutorial novamente
+• Configurações agrupadas em Teclado, Som e MIDI e Geral

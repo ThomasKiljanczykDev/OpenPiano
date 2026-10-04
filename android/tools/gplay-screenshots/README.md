@@ -1,6 +1,6 @@
 # gplay-screenshots
 
-Renders localized Play Store phone screenshots (1890x1063, one set per fastlane locale).
+Renders localized Play Store phone screenshots, one set per fastlane locale: keyboard landscape (1890x1063), settings portrait (1063x1890).
 
 ```
 cd android && ./gradlew :tools:gplay-screenshots:updateDebugScreenshotTest

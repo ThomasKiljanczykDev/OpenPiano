@@ -9,8 +9,8 @@ import dev.thomas_kiljanczyk.openpiano.feature.settings.impl.domain.LanguageOpti
 import dev.thomas_kiljanczyk.openpiano.feature.settings.impl.ui.SettingsScreen
 import dev.thomas_kiljanczyk.openpiano.feature.settings.impl.ui.SettingsUiState
 
-private const val SCREEN_WIDTH_DP = 800
-private const val SCREEN_HEIGHT_DP = 480
+private const val SCREEN_WIDTH_DP = 405
+private const val SCREEN_HEIGHT_DP = 720
 
 @PreviewTest
 @Preview(widthDp = SCREEN_WIDTH_DP, heightDp = SCREEN_HEIGHT_DP)

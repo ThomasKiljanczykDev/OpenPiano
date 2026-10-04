@@ -1,0 +1,3 @@
+• Przewodnik: krótkie wprowadzenie do klawiatury i ustawień przy pierwszym uruchomieniu
+• Powtórz go w dowolnej chwili: Ustawienia › Pokaż samouczek ponownie
+• Ustawienia pogrupowane w sekcje: Klawiatura, Dźwięk i MIDI, Ogólne

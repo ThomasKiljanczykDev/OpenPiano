@@ -1,0 +1,3 @@
+• Geführte Tour: kurze Einführung in Tastatur und Einstellungen beim ersten Start
+• Jederzeit wiederholen unter Einstellungen › Tutorial erneut anzeigen
+• Einstellungen gegliedert in Tastatur, Klang & MIDI und Allgemein

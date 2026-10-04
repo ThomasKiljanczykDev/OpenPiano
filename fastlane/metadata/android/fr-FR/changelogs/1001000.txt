@@ -1,0 +1,3 @@
+• Visite guidée : une courte présentation du clavier et des paramètres au premier lancement
+• À revoir à tout moment via Paramètres › Afficher à nouveau le tutoriel
+• Paramètres regroupés en Clavier, Son et MIDI et Général

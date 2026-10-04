@@ -44,8 +44,9 @@ private const val OVERVIEW_HEIGHT_DP = 48
 private const val LABEL_TEXT_SIZE_SP = 11
 private const val LABEL_BOTTOM_PADDING = 12f
 private const val KEY_BORDER_WIDTH = 2f
-private const val VIEWPORT_FILL_ALPHA = 0.25f
-private const val VIEWPORT_BORDER_WIDTH = 3f
+private const val VIEWPORT_FILL_ALPHA = 0.15f
+private const val OUTSIDE_SCRIM_ALPHA = 0.55f
+private val ViewportBorderWidth = 3.dp
 
 val MOCK_LOWEST_NOTE = Note.firstOfOctave(3)
 const val MOCK_VISIBLE_WHITE_KEYS = 10
@@ -55,6 +56,7 @@ const val MOCK_VISIBLE_WHITE_KEYS = 10
 fun MockKeyboardScreen(lowestNote: Int, whiteKeyCount: Int, labelMode: KeyLabelMode) {
     val keyColors = LocalKeyColors.current
     val viewportColor = MaterialTheme.colorScheme.primary
+    val scrimColor = MaterialTheme.colorScheme.scrim
     val textMeasurer = rememberTextMeasurer()
     Column(modifier = Modifier.fillMaxSize()) {
         Row(
@@ -82,7 +84,7 @@ fun MockKeyboardScreen(lowestNote: Int, whiteKeyCount: Int, labelMode: KeyLabelM
                 Icon(ImageVector.vectorResource(R.drawable.keyboard_arrow_left), contentDescription = null)
             }
             Canvas(modifier = Modifier.weight(1f).fillMaxSize().padding(horizontal = 4.dp, vertical = 4.dp)) {
-                drawMockOverview(lowestNote, whiteKeyCount, keyColors, viewportColor)
+                drawMockOverview(lowestNote, whiteKeyCount, keyColors, viewportColor, scrimColor)
             }
             IconButton(onClick = {}) {
                 Icon(ImageVector.vectorResource(R.drawable.keyboard_arrow_right), contentDescription = null)
@@ -120,6 +122,7 @@ private fun DrawScope.drawMockOverview(
     visibleWhiteKeys: Int,
     keyColors: KeyColors,
     viewportColor: Color,
+    scrimColor: Color,
 ) {
     if (size.width <= 0f || size.height <= 0f) return
     val layout = KeyboardLayout(Piano.LOWEST_MIDI, Piano.whiteKeyCount, size.width, size.height)
@@ -128,14 +131,16 @@ private fun DrawScope.drawMockOverview(
     val first = Piano.whiteKeyIndexOf(lowestNote)
     val last = (first + visibleWhiteKeys - 1).coerceAtMost(layout.whiteKeys.lastIndex)
     val left = layout.whiteKeys[first].left
-    val viewport = Size(layout.whiteKeys[last].right - left, size.height)
-    drawRect(color = viewportColor.copy(alpha = VIEWPORT_FILL_ALPHA), topLeft = Offset(left, 0f), size = viewport)
-    drawRect(
-        color = viewportColor,
-        topLeft = Offset(left, 0f),
-        size = viewport,
-        style = Stroke(width = VIEWPORT_BORDER_WIDTH),
-    )
+    val right = layout.whiteKeys[last].right
+    val scrim = scrimColor.copy(alpha = OUTSIDE_SCRIM_ALPHA)
+    drawRect(color = scrim, size = Size(left, size.height))
+    drawRect(color = scrim, topLeft = Offset(right, 0f), size = Size(size.width - right, size.height))
+    val stroke = ViewportBorderWidth.toPx()
+    val inset = stroke / 2
+    val topLeft = Offset(left + inset, inset)
+    val viewport = Size(right - left - stroke, size.height - stroke)
+    drawRect(color = viewportColor.copy(alpha = VIEWPORT_FILL_ALPHA), topLeft = topLeft, size = viewport)
+    drawRect(color = viewportColor, topLeft = topLeft, size = viewport, style = Stroke(width = stroke))
 }
 
 private fun DrawScope.drawMockKey(key: KeyRect, fill: Color, colors: KeyColors) {
