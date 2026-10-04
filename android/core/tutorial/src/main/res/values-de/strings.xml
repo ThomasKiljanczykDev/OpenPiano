@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tutorial_next">Weiter</string>
+    <string name="tutorial_skip">Überspringen</string>
+    <string name="tutorial_done">Fertig</string>
+    <string name="tutorial_step_counter">%1$d von %2$d</string>
+</resources>

@@ -46,6 +46,9 @@ class UserPreferencesRepositoryImpl @Inject constructor(private val dataStore: D
     override val themeMode: Flow<ThemeMode> =
         preferences.map { it.themeMode.toDomain() ?: ThemeMode.SYSTEM }.distinctUntilChanged()
 
+    override val tutorialCompletedVersion: Flow<Int> =
+        preferences.map { it.tutorialCompletedVersion }.distinctUntilChanged()
+
     override suspend fun setVisibleWhiteKeys(count: Int) {
         val clamped = count.coerceIn(KeyboardSettings.VISIBLE_WHITE_KEYS_RANGE)
         update { stored ->
@@ -88,6 +91,10 @@ class UserPreferencesRepositoryImpl @Inject constructor(private val dataStore: D
 
     override suspend fun setThemeMode(mode: ThemeMode) {
         update { it.toBuilder().setThemeMode(mode.toProto()).build() }
+    }
+
+    override suspend fun setTutorialCompletedVersion(version: Int) {
+        update { it.toBuilder().setTutorialCompletedVersion(version).build() }
     }
 
     override suspend fun getLanguageTag(): String? =

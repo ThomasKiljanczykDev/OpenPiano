@@ -12,6 +12,8 @@ interface UserPreferencesRepository {
 
     val themeMode: Flow<ThemeMode>
 
+    val tutorialCompletedVersion: Flow<Int>
+
     suspend fun setVisibleWhiteKeys(count: Int)
 
     suspend fun setLowestNote(midi: Int)
@@ -27,6 +29,8 @@ interface UserPreferencesRepository {
     suspend fun setAreaOverlapThresholdPercent(percent: Int)
 
     suspend fun setThemeMode(mode: ThemeMode)
+
+    suspend fun setTutorialCompletedVersion(version: Int)
 
     /** Null when the user never picked a language. */
     suspend fun getLanguageTag(): String?

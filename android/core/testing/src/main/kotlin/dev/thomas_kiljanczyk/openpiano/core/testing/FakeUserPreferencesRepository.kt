@@ -14,11 +14,14 @@ class FakeUserPreferencesRepository(initial: KeyboardSettings = KeyboardSettings
     UserPreferencesRepository {
     private val state = MutableStateFlow(initial)
     private val themeModeState = MutableStateFlow(ThemeMode.SYSTEM)
+    private val tutorialCompletedVersionState = MutableStateFlow(0)
     private var languageTag: String? = null
 
     override val keyboardSettings: StateFlow<KeyboardSettings> = state.asStateFlow()
 
     override val themeMode: StateFlow<ThemeMode> = themeModeState.asStateFlow()
+
+    override val tutorialCompletedVersion: StateFlow<Int> = tutorialCompletedVersionState.asStateFlow()
 
     fun emit(value: KeyboardSettings) {
         state.value = value
@@ -43,6 +46,10 @@ class FakeUserPreferencesRepository(initial: KeyboardSettings = KeyboardSettings
 
     override suspend fun setThemeMode(mode: ThemeMode) {
         themeModeState.value = mode
+    }
+
+    override suspend fun setTutorialCompletedVersion(version: Int) {
+        tutorialCompletedVersionState.value = version
     }
 
     override suspend fun getLanguageTag(): String? = languageTag

@@ -26,6 +26,7 @@ and a root `.idea/` is ignored outright. `PLAN.md` is the v1 spec; it is authori
 | `core:data` | `UserPreferencesRepository` over DataStore |
 | `core:audio` | Oboe + TSF + JNI. `AudioEngine` interface, `OboeAudioEngine`, Hilt module, SF3 asset |
 | `core:analytics` | `AnalyticsHelper` interface. No Firebase dependency — see "Product flavors" below |
+| `core:tutorial` | Guided-tour overlay: `TourAnchor`, `TourHost`, `TourStep`, card placement, version gating, chrome strings |
 | `core:midi` | MIDI I/O support |
 | `core:testing` | Shared test utilities |
 | `feature:keyboard:impl` | Compose keyboard, `KeyboardViewModel`, navigation |
