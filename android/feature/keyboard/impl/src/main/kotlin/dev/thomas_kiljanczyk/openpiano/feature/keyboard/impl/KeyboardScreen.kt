@@ -46,6 +46,7 @@ import dev.thomas_kiljanczyk.openpiano.core.model.Note
 import dev.thomas_kiljanczyk.openpiano.core.model.Piano
 import dev.thomas_kiljanczyk.openpiano.core.tutorial.TourAnchor
 import dev.thomas_kiljanczyk.openpiano.core.tutorial.tourAnchor
+import dev.thomas_kiljanczyk.openpiano.core.ui.LandscapeLayout
 import dev.thomas_kiljanczyk.openpiano.core.ui.LockDisplayCutoutMode
 import dev.thomas_kiljanczyk.openpiano.core.ui.LockScreenOrientation
 
@@ -58,14 +59,18 @@ fun KeyboardRoute(viewModel: KeyboardViewModel = hiltViewModel(), onNavigateToSe
     LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE)
     LockDisplayCutoutMode(WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS)
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    KeyboardScreen(
-        uiState = uiState,
-        engine = viewModel.audioEngine,
-        midiOutputPort = viewModel.midiOutputPort,
-        onShiftKeys = viewModel::shiftKeys,
-        onLowestNoteChange = viewModel::setLowestNote,
-        onOpenSettings = onNavigateToSettings,
-    )
+    LandscapeLayout {
+        KeyboardScreen(
+            uiState = uiState,
+            engine = viewModel.audioEngine,
+            midiOutputPort = viewModel.midiOutputPort,
+            onShiftKeys = viewModel::shiftKeys,
+            onLowestNoteChange = viewModel::setLowestNote,
+            onOpenSettings = onNavigateToSettings,
+            safeDrawing = safeDrawing,
+            displayCutout = displayCutout,
+        )
+    }
 }
 
 @Composable
@@ -77,6 +82,8 @@ fun KeyboardScreen(
     onLowestNoteChange: (Int) -> Unit,
     onOpenSettings: () -> Unit,
     modifier: Modifier = Modifier,
+    safeDrawing: WindowInsets = WindowInsets.safeDrawing,
+    displayCutout: WindowInsets = WindowInsets.displayCutout,
 ) {
     val midiOutputEnabled by rememberUpdatedState(uiState.settings.midiOutputEnabled)
     DisposableEffect(engine, midiOutputPort) {
@@ -88,7 +95,7 @@ fun KeyboardScreen(
     Column(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = Modifier.windowInsetsPadding(
-                WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
+                safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
             ),
         ) {
             KeyboardControls(uiState = uiState, onOpenSettings = onOpenSettings)
@@ -105,8 +112,8 @@ fun KeyboardScreen(
             modifier = Modifier
                 .weight(1f)
                 .windowInsetsPadding(
-                    WindowInsets.safeDrawing
-                        .exclude(WindowInsets.displayCutout)
+                    safeDrawing
+                        .exclude(displayCutout)
                         .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom),
                 )
                 .tourAnchor(TourAnchor.KEYBOARD_KEYS)

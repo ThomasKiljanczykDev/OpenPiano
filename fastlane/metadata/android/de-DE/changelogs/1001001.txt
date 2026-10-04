@@ -1,0 +1,1 @@
+• Die Zurück-Geste aus den Einstellungen im Hochformat wird nicht mehr durch das Drehen des Bildschirms abgebrochen

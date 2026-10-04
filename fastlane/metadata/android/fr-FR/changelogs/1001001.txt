@@ -1,0 +1,1 @@
+• Le geste Retour depuis les Paramètres en mode portrait n'est plus annulé par la rotation de l'écran

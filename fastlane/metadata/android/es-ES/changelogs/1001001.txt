@@ -1,0 +1,1 @@
+• El gesto Atrás desde Ajustes en vertical ya no se cancela por la rotación de la pantalla
