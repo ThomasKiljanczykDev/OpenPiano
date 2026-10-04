@@ -1,0 +1,3 @@
+• Recorrido guiado: una breve introducción al teclado y los ajustes en el primer inicio
+• Repítelo cuando quieras en Ajustes › Mostrar el tutorial de nuevo
+• Ajustes agrupados en Teclado, Sonido y MIDI y General

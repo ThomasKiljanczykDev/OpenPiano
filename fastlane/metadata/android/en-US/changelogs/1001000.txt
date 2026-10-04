@@ -1,0 +1,3 @@
+• Guided tour: a quick walkthrough of the keyboard and settings on first launch
+• Replay it any time with Settings › Show tutorial again
+• Settings grouped into Keyboard, Sound & MIDI and General
