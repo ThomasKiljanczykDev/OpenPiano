@@ -13,9 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,11 +40,26 @@ import kotlin.math.roundToInt
 private val SettingsTileMinHeight = 64.dp
 
 @Composable
+fun SettingsCategory(title: String, modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+    Column(modifier = modifier.fillMaxWidth()) {
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(horizontal = 16.dp),
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        content()
+    }
+}
+
+@Composable
 fun SettingsCardGroup(modifier: Modifier = Modifier, content: @Composable SettingsCardGroupScope.() -> Unit) {
     val scope = SettingsCardGroupScopeImpl()
     scope.content()
 
-    Column(modifier = modifier.verticalScroll(rememberScrollState())) {
+    Column(modifier = modifier) {
         scope.items.forEachIndexed { index, item ->
             val isFirst = index == 0
             val isLast = index == scope.items.lastIndex

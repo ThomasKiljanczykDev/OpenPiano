@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="settings_title">Configurações</string>
+    <string name="settings_section_keyboard">Teclado</string>
+    <string name="settings_section_sound_midi">Som e MIDI</string>
+    <string name="settings_section_general">Geral</string>
     <string name="settings_navigate_up">Voltar</string>
     <string name="settings_language">Idioma</string>
     <string name="settings_language_system_default">Padrão do sistema</string>

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="settings_title">Paramètres</string>
+    <string name="settings_section_keyboard">Clavier</string>
+    <string name="settings_section_sound_midi">Son et MIDI</string>
+    <string name="settings_section_general">Général</string>
     <string name="settings_navigate_up">Retour</string>
     <string name="settings_language">Langue</string>
     <string name="settings_language_system_default">Système par défaut</string>

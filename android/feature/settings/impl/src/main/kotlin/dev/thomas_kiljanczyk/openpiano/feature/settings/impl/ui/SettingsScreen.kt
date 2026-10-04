@@ -8,7 +8,12 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -114,7 +119,7 @@ fun SettingsScreen(
     ) { contentPadding ->
         if (uiState == null) return@Scaffold
         SettingsCardGroupContent(
-            modifier = Modifier.padding(contentPadding).padding(16.dp),
+            modifier = Modifier.padding(contentPadding).padding(horizontal = 16.dp),
             uiState = uiState,
             language = language,
             languageOptions = languageOptions,
@@ -147,62 +152,123 @@ private fun SettingsCardGroupContent(
     onReplayTutorial: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    SettingsCardGroup(modifier = modifier) {
-        item {
-            SettingsRowWithRadioButtonGroupDialog(
-                title = stringResource(R.string.settings_language),
-                value = language,
-                options = languageOptions,
-                onValueChange = onLanguageChange,
-            )
+    Column(modifier = modifier.verticalScroll(rememberScrollState())) {
+        KeyboardSection(
+            uiState = uiState,
+            onLabelModeChange = onLabelModeChange,
+            onVisibleWhiteKeysChange = onVisibleWhiteKeysChange,
+            onTouchHitTestModeChange = onTouchHitTestModeChange,
+            onAreaOverlapThresholdPercentChange = onAreaOverlapThresholdPercentChange,
+        )
+        SoundMidiSection(
+            uiState = uiState,
+            onReverbEnabledChange = onReverbEnabledChange,
+            onMidiOutputEnabledChange = onMidiOutputEnabledChange,
+        )
+        GeneralSection(
+            uiState = uiState,
+            language = language,
+            languageOptions = languageOptions,
+            onLanguageChange = onLanguageChange,
+            onThemeModeChange = onThemeModeChange,
+            onReplayTutorial = onReplayTutorial,
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+    }
+}
+
+@Composable
+private fun KeyboardSection(
+    uiState: SettingsUiState,
+    onLabelModeChange: (KeyLabelMode) -> Unit,
+    onVisibleWhiteKeysChange: (Int) -> Unit,
+    onTouchHitTestModeChange: (TouchHitTestMode) -> Unit,
+    onAreaOverlapThresholdPercentChange: (Int) -> Unit,
+) {
+    SettingsCategory(title = stringResource(R.string.settings_section_keyboard)) {
+        SettingsCardGroup {
+            item {
+                SettingsSlider(
+                    title = stringResource(R.string.settings_visible_keys),
+                    value = uiState.settings.visibleWhiteKeys,
+                    valueRange = KeyboardSettings.VISIBLE_WHITE_KEYS_RANGE,
+                    onValueChange = onVisibleWhiteKeysChange,
+                    modifier = Modifier.tourAnchor(TourAnchor.SETTINGS_VISIBLE_KEYS),
+                )
+            }
+            item {
+                TouchHitTestModeRow(
+                    mode = uiState.settings.touchHitTestMode,
+                    supported = uiState.areaModeSupported,
+                    onModeChange = onTouchHitTestModeChange,
+                    modifier = Modifier.tourAnchor(TourAnchor.SETTINGS_TOUCH_MODE),
+                )
+            }
+            item {
+                TouchPrecisionRow(
+                    visible = uiState.areaModeSupported &&
+                        uiState.settings.touchHitTestMode == TouchHitTestMode.AREA,
+                    value = uiState.settings.areaOverlapThresholdPercent,
+                    onValueChange = onAreaOverlapThresholdPercentChange,
+                )
+            }
+            item {
+                LabelModeRow(labelMode = uiState.settings.labelMode, onLabelModeChange = onLabelModeChange)
+            }
         }
-        item {
-            ThemeModeRow(themeMode = uiState.themeMode, onThemeModeChange = onThemeModeChange)
+    }
+}
+
+@Composable
+private fun SoundMidiSection(
+    uiState: SettingsUiState,
+    onReverbEnabledChange: (Boolean) -> Unit,
+    onMidiOutputEnabledChange: (Boolean) -> Unit,
+) {
+    SettingsCategory(title = stringResource(R.string.settings_section_sound_midi)) {
+        SettingsCardGroup {
+            item {
+                SettingsCheckbox(
+                    title = stringResource(R.string.settings_reverb),
+                    checked = uiState.settings.reverbEnabled,
+                    onCheckedChange = onReverbEnabledChange,
+                )
+            }
+            item {
+                MidiOutputRow(
+                    checked = uiState.settings.midiOutputEnabled,
+                    connected = uiState.midiOutputConnected,
+                    onCheckedChange = onMidiOutputEnabledChange,
+                )
+            }
         }
-        item {
-            LabelModeRow(labelMode = uiState.settings.labelMode, onLabelModeChange = onLabelModeChange)
+    }
+}
+
+@Composable
+private fun GeneralSection(
+    uiState: SettingsUiState,
+    language: LanguageOption,
+    languageOptions: List<Pair<LanguageOption, String>>,
+    onLanguageChange: (LanguageOption) -> Unit,
+    onThemeModeChange: (ThemeMode) -> Unit,
+    onReplayTutorial: () -> Unit,
+) {
+    SettingsCategory(title = stringResource(R.string.settings_section_general)) {
+        SettingsCardGroup {
+            item {
+                SettingsRowWithRadioButtonGroupDialog(
+                    title = stringResource(R.string.settings_language),
+                    value = language,
+                    options = languageOptions,
+                    onValueChange = onLanguageChange,
+                )
+            }
+            item { ThemeModeRow(themeMode = uiState.themeMode, onThemeModeChange = onThemeModeChange) }
+            item { ReplayTutorialRow(onClick = onReplayTutorial) }
+            item { PrivacyPolicyRow() }
+            item { DonateRow() }
         }
-        item {
-            SettingsSlider(
-                title = stringResource(R.string.settings_visible_keys),
-                value = uiState.settings.visibleWhiteKeys,
-                valueRange = KeyboardSettings.VISIBLE_WHITE_KEYS_RANGE,
-                onValueChange = onVisibleWhiteKeysChange,
-                modifier = Modifier.tourAnchor(TourAnchor.SETTINGS_VISIBLE_KEYS),
-            )
-        }
-        item {
-            SettingsCheckbox(
-                title = stringResource(R.string.settings_reverb),
-                checked = uiState.settings.reverbEnabled,
-                onCheckedChange = onReverbEnabledChange,
-            )
-        }
-        item {
-            MidiOutputRow(
-                checked = uiState.settings.midiOutputEnabled,
-                connected = uiState.midiOutputConnected,
-                onCheckedChange = onMidiOutputEnabledChange,
-            )
-        }
-        item {
-            TouchHitTestModeRow(
-                mode = uiState.settings.touchHitTestMode,
-                supported = uiState.areaModeSupported,
-                onModeChange = onTouchHitTestModeChange,
-                modifier = Modifier.tourAnchor(TourAnchor.SETTINGS_TOUCH_MODE),
-            )
-        }
-        item {
-            TouchPrecisionRow(
-                visible = uiState.areaModeSupported && uiState.settings.touchHitTestMode == TouchHitTestMode.AREA,
-                value = uiState.settings.areaOverlapThresholdPercent,
-                onValueChange = onAreaOverlapThresholdPercentChange,
-            )
-        }
-        item { ReplayTutorialRow(onClick = onReplayTutorial) }
-        item { PrivacyPolicyRow() }
-        item { DonateRow() }
     }
 }
 
